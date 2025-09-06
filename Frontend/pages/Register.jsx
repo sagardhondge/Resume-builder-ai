@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import API from "../utils/axios";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -15,6 +17,7 @@ const Register = () => {
       const { data } = await API.post("/auth/register", form);
       localStorage.setItem("token", data.token);
       setMessage("Registered successfully!");
+      navigate("/dashboard"); // ✅ redirect
     } catch (err) {
       setMessage(err.response?.data?.message || "Error");
     }
@@ -26,7 +29,7 @@ const Register = () => {
       <input name="email" type="email" placeholder="Email" onChange={handleChange} />
       <input name="password" type="password" placeholder="Password" onChange={handleChange} />
       <button type="submit">Register</button>
-      <p>{message}</p>
+      <p>{message || "Register successfully"}</p>
     </form>
   );
 };
