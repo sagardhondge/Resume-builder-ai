@@ -28,6 +28,15 @@ const Dashboard = () => {
     fetchResumes();
   }, []);
 
+  <button
+  onClick={() => {
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+  }}
+>
+  Logout
+</button>
+
   return (
     <div>
       <h2>Your Resumes</h2>
