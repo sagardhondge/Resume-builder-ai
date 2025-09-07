@@ -16,8 +16,8 @@ const Register = () => {
     try {
       const { data } = await API.post("/auth/register", form);
       localStorage.setItem("token", data.token);
-      setMessage("Registered successfully!");
-      navigate("/dashboard"); // ✅ redirect
+      setMessage("Registration successful!");
+      navigate("/dashboard"); // redirect to dashboard
     } catch (err) {
       setMessage(err.response?.data?.message || "Error");
     }
@@ -25,11 +25,11 @@ const Register = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <input name="name" placeholder="Name" onChange={handleChange} />
+      <input name="name" type="text" placeholder="Name" onChange={handleChange} />
       <input name="email" type="email" placeholder="Email" onChange={handleChange} />
       <input name="password" type="password" placeholder="Password" onChange={handleChange} />
       <button type="submit">Register</button>
-      <p>{message || "Register successfully"}</p>
+      <p>{message}</p>
     </form>
   );
 };
