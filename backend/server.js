@@ -2,7 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
-
 // Load environment variables
 dotenv.config();
 
@@ -27,7 +26,6 @@ import resumeRoute from './routes/resumeRoute.js';
 // Route Middlewares
 app.use('/api/auth', authRoute);
 app.use('/api/resume', resumeRoute);
-
 // 404 Handler
 app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
