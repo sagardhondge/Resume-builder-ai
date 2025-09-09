@@ -6,21 +6,21 @@ import AtsScoreChecker from "./pages/AtsScoreChecker";
 import Templates from "./pages/Templates";
 import Login from "./pages/Login";
 import { AuthProvider } from "./context/AuthContext";
+import './index.css'   
 
 function App() {
   return (
     <AuthProvider>
-    <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Navigate to="/dashboard" />} />
-
-        <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/ats-checker" element={<AtsScoreChecker />} />
-        <Route path="/templates" element={<Templates />} />
-      </Routes>
-    </Router>
+      <Router>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Navigate to="/dashboard" />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/ats-checker" element={<AtsScoreChecker />} />
+          <Route path="/templates" element={<Templates />} />
+        </Routes>
+      </Router>
     </AuthProvider>
   );
 }
