@@ -40,7 +40,7 @@ const ResumeBuilder = () => {
 
       {/* Right: Resume Preview */}
       <div style={{ flex: 1, border: "1px solid #ccc", padding: "20px" }} ref={resumeRef}>
-        <Template data={form} />
+        <Templates data={form} />
       </div>
     </div>
   );

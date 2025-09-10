@@ -45,9 +45,9 @@ const Dashboard = () => {
               </button>
               <button
                 className="btn btn-warning btn-lg text-dark fw-bold px-4 py-2 rounded-pill"
-                onClick={() => navigate("/template")}
+                onClick={() => navigate("/resume-builder")}
               >
-                Build My Resume
+               Build My Resume
               </button>
             </div>
             <div className="mt-4">

@@ -22,7 +22,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/ats-checker" element={<AtsScoreChecker />} />
           <Route path="/templates" element={<Templates />} />
-          <Route path="/resume-builder" element={<ResumeBuilder />} /> {/* ✅ New Route */}
+          <Route path="/resume-builder" element={<ResumeBuilder />} /> 
         </Routes>
       </Router>
     </AuthProvider>
