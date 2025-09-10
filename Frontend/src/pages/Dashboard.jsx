@@ -1,135 +1,105 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import API from "../utils/axios";
-import { useAuth } from "../context/AuthContext"; // assuming you have auth context
+import resumeImg from "../assets/resumehome.avif"; 
+import trustpilotLogo from "../assets/trustpilot.svg";
+import { FaCommentDots } from "react-icons/fa"; // Message icon
 
 const Dashboard = () => {
-  const [resumes, setResumes] = useState([]);
-  const [title, setTitle] = useState("");
-  const [resumeText, setResumeText] = useState("");
-  const [score, setScore] = useState(null);
-  const [loading, setLoading] = useState(false);
-
-  const { user } = useAuth();
   const navigate = useNavigate();
 
-  // Fetch resumes only if logged in
-  const fetchResumes = async () => {
-    try {
-      if (!user) return;
-      const { data } = await API.get("/resume");
-      setResumes(data);
-    } catch (err) {
-      console.error(err);
-    }
+  const handleChatClick = () => {
+    // Navigate to AI Chat page or open modal
+    navigate("/ai-chat"); // replace with your AI chat route
   };
-
-  const createResume = async () => {
-    if (!user) {
-      navigate("/login");
-      return;
-    }
-    try {
-      await API.post("/resume", { title, experience: [], skills: [] });
-      setTitle("");
-      fetchResumes();
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleCheckATS = async () => {
-    if (!resumeText.trim()) {
-      alert("Please paste your resume text first.");
-      return;
-    }
-    try {
-      setLoading(true);
-      const { data } = await API.post("/ats/score", { resume: resumeText });
-      setScore(data.score);
-    } catch (err) {
-      console.error(err);
-      alert("Error checking ATS score.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchResumes();
-  }, [user]);
 
   return (
-    <div className="container mt-5">
-      <h1 className="mb-4 text-center">Dashboard</h1>
-
-      {/* --- ATS Score Checker (Public) --- */}
-      <div className="card p-3 mb-4">
-        <h3>Check Your ATS Score (No Login Required)</h3>
-        <textarea
-          className="form-control mb-3"
-          rows="6"
-          placeholder="Paste your resume text here..."
-          value={resumeText}
-          onChange={(e) => setResumeText(e.target.value)}
-        />
-        <button
-          className="btn btn-primary"
-          onClick={handleCheckATS}
-          disabled={loading}
-        >
-          {loading ? "Checking..." : "Check ATS Score"}
-        </button>
-
-        {score !== null && (
-          <div className="alert alert-info mt-3">
-            <h4>ATS Score: {score}%</h4>
-            <p>
-              {score >= 80
-                ? "✅ Great! Your resume is highly ATS-friendly."
-                : "⚠️ Needs improvement. Try editing to increase the score."}
-            </p>
+    <div className="d-flex justify-content-center mt-4 position-relative">
+      {/* Hero Section */}
+      <div
+        className="container shadow-lg rounded-4 p-5"
+        style={{ backgroundColor: "#4eaac1ff", maxWidth: "1300px", maxHeight: "1000px" }}
+      >
+        <div className="row align-items-center text-white">
+          {/* Left - Resume Preview */}
+          <div className="col-lg-6 mb-4 mb-lg-0 text-center">
+            <img
+              src={resumeImg}
+              alt="Resume Preview"
+              className="img-fluid rounded shadow-lg"
+              style={{ maxHeight: "500px", borderRadius: "20px" }}
+            />
           </div>
-        )}
+
+          {/* Right - Call to Action */}
+          <div className="col-lg-6 text-center text-lg-start">
+            <h1 className="fw-bold mb-3 display-5">
+              Build Your <span className="text-warning">AI Resume</span> Today
+            </h1>
+            <p className="mb-4 fs-5">
+              Create your perfect resume with AI suggestions, ATS-friendly
+              templates, and expert tips to get hired faster.
+            </p>
+            <div className="d-flex flex-column flex-lg-row gap-3">
+              <button className="btn btn-outline-light btn-lg px-4 py-2 rounded-pill">
+                Import Existing Resume
+              </button>
+              <button
+                className="btn btn-warning btn-lg text-dark fw-bold px-4 py-2 rounded-pill"
+                onClick={() => navigate("/templates")}
+              >
+                Build My Resume
+              </button>
+            </div>
+            <div className="mt-4">
+              <p className="mb-1 fs-6">📈 30% higher chance of getting a job</p>
+              <p className="mb-0 fs-6">
+                ⚡ 42% higher response rate from recruiters
+              </p>
+            </div>
+            {/* Trustpilot Rating */}
+            <div className="mt-4 d-flex align-items-center gap-3">
+              <div>
+                <h5 className="mb-1">Excellent</h5>
+                <p className="mb-0 text-white-50">
+                  <strong>4.5</strong> out of 5 based on{" "}
+                  <strong>16,135 reviews</strong> on
+                  <img
+                    src={trustpilotLogo}
+                    alt="Trustpilot"
+                    style={{ height: "20px", marginLeft: "5px", filter: "invert(1)" }}
+                  />
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* --- Resume List & Create (Login Required) --- */}
-      {user ? (
-        <div className="card p-3">
-          <h3>Your Resumes</h3>
-          <input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Resume Title"
-            className="form-control mb-2"
-          />
-          <button className="btn btn-success mb-3" onClick={createResume}>
-            Create Resume
-          </button>
-
-          <ul className="list-group">
-            {resumes.map((r) => (
-              <li className="list-group-item" key={r._id}>
-                {r.title}
-              </li>
-            ))}
-          </ul>
-
-          <button
-            className="btn btn-danger mt-3"
-            onClick={() => {
-              localStorage.removeItem("token");
-              window.location.href = "/login";
-            }}
-          >
-            Logout
-          </button>
-        </div>
-      ) : (
-        <div className="alert alert-warning">
-          ⚠️ Login to create, edit, or save resumes.
-        </div>
-      )}
+      {/* Floating Chat Icon with Text */}
+      <div
+        onClick={handleChatClick}
+        style={{
+          position: "fixed",
+          bottom: "30px",
+          right: "30px",
+          backgroundColor: "#ffc107",
+          color: "#000",
+          padding: "12px 20px",
+          borderRadius: "50px",
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+          cursor: "pointer",
+          zIndex: 1000,
+          fontWeight: "bold",
+          fontSize: "14px",
+        }}
+        title="Chat with us"
+      >
+        <FaCommentDots size={20} />
+        <span>Chat with us</span>
+      </div>
     </div>
   );
 };

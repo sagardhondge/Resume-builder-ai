@@ -10,38 +10,26 @@ const Navbar = () => {
   };
 
   return (
-    <nav style={styles.nav}>
-      <h2 style={styles.logo}>Resume Builder AI</h2>
-      <div style={styles.links}>
-        <Link to="/dashboard" style={styles.link}>Home</Link>
-        <Link to="/ats-checker" style={styles.link}>ATS Score</Link>
-        <Link to="/templates" style={styles.link}>Templates</Link>
-        <button onClick={handleLogout} style={styles.logout}>Logout</button>
+    <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3">
+      <div className="container">
+        <h2 className="navbar-brand fw-bold mb-0">Resume Builder AI</h2>
+        <div className="d-flex align-items-center gap-3">
+          <Link to="/dashboard" className="nav-link text-dark fw-semibold">
+            Home
+          </Link>
+          <Link to="/ats-checker" className="nav-link text-dark fw-semibold">
+            ATS Score
+          </Link>
+          <Link to="/templates" className="nav-link text-dark fw-semibold">
+            Templates
+          </Link>
+          <button onClick={handleLogout} className="btn btn-danger btn-sm">
+            Login
+          </button>
+        </div>
       </div>
     </nav>
   );
-};
-
-const styles = {
-  nav: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "12px 20px",
-    background: "#222",
-    color: "white",
-  },
-  logo: { margin: 0 },
-  links: { display: "flex", gap: "15px" },
-  link: { color: "white", textDecoration: "none" },
-  logout: {
-    background: "crimson",
-    border: "none",
-    padding: "6px 12px",
-    color: "white",
-    borderRadius: "4px",
-    cursor: "pointer",
-  },
 };
 
 export default Navbar;
