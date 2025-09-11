@@ -1,4 +1,5 @@
-import React, { useState, useRef } from "react";
+// src/pages/ResumeBuilder.jsx
+import React, { useState, useRef, useEffect } from "react";
 import { useReactToPrint } from "react-to-print";
 import Templates from "../components/Templates";
 
@@ -22,43 +23,73 @@ const sections = [
   "Declaration",
 ];
 
+const initialFormState = {
+  basicInfo: {
+    firstName: "",
+    middleName: "",
+    lastName: "",
+    dob: "",
+    gender: "",
+    email: "",
+    phone: "",
+    altPhone: "",
+    currentAddress: "",
+    permanentAddress: "",
+    linkedin: "",
+    github: "",
+    portfolio: "",
+  },
+  careerObjective: "",
+  education: [{ degree: "", institution: "", year: "", grade: "" }],
+  internships: [{ company: "", role: "", duration: "", description: "" }],
+  projects: [{ title: "", description: "", link: "" }],
+  technicalSkills: [""],
+  certifications: [""],
+  achievements: [""],
+  coCurricular: [""],
+  extraCurricular: [""],
+  languages: [""],
+  strengths: [""],
+  hobbies: [""],
+  areaOfInterest: [""],
+  jobPreferences: "",
+  familyBackground: "",
+  declaration: "",
+};
+
 const ResumeBuilder = () => {
   const [currentStep, setCurrentStep] = useState(0);
-  const [selectedTemplate, setSelectedTemplate] = useState("classic"); // ✅ Default Classic
-  const [showPreview, setShowPreview] = useState(false); // ✅ Toggle preview
-  const [form, setForm] = useState({
-    basicInfo: {
-      firstName: "",
-      middleName: "",
-      lastName: "",
-      dob: "",
-      gender: "",
-      email: "",
-      phone: "",
-      altPhone: "",
-      currentAddress: "",
-      permanentAddress: "",
-      linkedin: "",
-      github: "",
-      portfolio: "",
-    },
-    careerObjective: "",
-    education: [{ degree: "", institution: "", year: "", grade: "" }],
-    internships: [{ company: "", role: "", duration: "", description: "" }],
-    projects: [{ title: "", description: "", link: "" }],
-    technicalSkills: [""],
-    certifications: [""],
-    achievements: [""],
-    coCurricular: [""],
-    extraCurricular: [""],
-    languages: [""],
-    strengths: [""],
-    hobbies: [""],
-    areaOfInterest: [""],
-    jobPreferences: "",
-    familyBackground: "",
-    declaration: "",
-  });
+  const [selectedTemplate, setSelectedTemplate] = useState("classic");
+  const [showPreview, setShowPreview] = useState(false);
+  const [form, setForm] = useState(initialFormState);
+  const [showRestorePrompt, setShowRestorePrompt] = useState(false);
+
+  // 🔹 Load saved data if exists
+  useEffect(() => {
+    const savedData = localStorage.getItem("resumeData");
+    if (savedData) {
+      setShowRestorePrompt(true);
+    }
+  }, []);
+
+  // 🔹 Auto-save form whenever it changes
+  useEffect(() => {
+    if (form) {
+      localStorage.setItem("resumeData", JSON.stringify(form));
+    }
+  }, [form]);
+
+  const handleRestore = () => {
+    const savedData = JSON.parse(localStorage.getItem("resumeData"));
+    setForm(savedData || initialFormState);
+    setShowRestorePrompt(false);
+  };
+
+  const handleStartFresh = () => {
+    localStorage.removeItem("resumeData");
+    setForm(initialFormState);
+    setShowRestorePrompt(false);
+  };
 
   const handleChange = (section, field, value, index = null) => {
     if (Array.isArray(form[section])) {
@@ -89,7 +120,7 @@ const ResumeBuilder = () => {
   });
 
   const handleDownload = () => {
-    const token = localStorage.getItem("token"); // ✅ Check login
+    const token = localStorage.getItem("token");
     if (!token) {
       alert("⚠️ Please login to download your resume.");
       return;
@@ -105,13 +136,28 @@ const ResumeBuilder = () => {
 
   return (
     <div className="container py-4">
+      {/* 🔹 Restore Prompt */}
+      {showRestorePrompt && (
+        <div className="alert alert-warning d-flex justify-content-between align-items-center">
+          <span>⚠️ You have unsaved progress. Do you want to restore it?</span>
+          <div>
+            <button className="btn btn-sm btn-success me-2" onClick={handleRestore}>
+              Continue
+            </button>
+            <button className="btn btn-sm btn-danger" onClick={handleStartFresh}>
+              Start Fresh
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Header Buttons */}
       <div className="d-flex justify-content-between mb-4 gap-2">
         <button className="btn btn-info" onClick={() => setShowPreview(true)}>
-           Preview Resume
+          Preview Resume
         </button>
         <button className="btn btn-success" onClick={handleDownload}>
-           Download Resume
+          Download Resume
         </button>
         <button
           className="btn btn-primary"
@@ -120,7 +166,7 @@ const ResumeBuilder = () => {
             setCurrentStep(0);
           }}
         >
-           Select Template
+          Select Template
         </button>
       </div>
 
@@ -227,10 +273,10 @@ const ResumeBuilder = () => {
                 }
               />
             </div>
-                        <div className="col-md-6">
+            <div className="col-md-6">
               <input
                 className="form-control"
-                placeholder=" Portfolio"
+                placeholder="Portfolio"
                 value={form.basicInfo.portfolio}
                 onChange={(e) =>
                   handleChange("basicInfo", "portfolio", e.target.value)
@@ -446,7 +492,7 @@ const ResumeBuilder = () => {
           </div>
         )}
 
-        {/* STEP 5–13 (skills, certifications, achievements, activities, languages, strengths, hobbies, areas of interest) */}
+        {/* STEP 5–13 (skills, certifications, etc.) */}
         {[
           "technicalSkills",
           "certifications",
@@ -514,7 +560,7 @@ const ResumeBuilder = () => {
             onChange={(e) => handleChange("declaration", null, e.target.value)}
           />
         )}
-      </div>  {/* <-- closes .card */}
+      </div>
 
       {/* Navigation Buttons */}
       <div className="d-flex justify-content-between mt-4">

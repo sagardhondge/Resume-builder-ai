@@ -108,89 +108,86 @@ const ExecutiveTemplate = ({ data = {} }) => {
       )}
 
       {/* Education */}
-      {education.length > 0 &&
-        education.some(
-          (edu) => edu.degree || edu.institution || isNumber(edu.year) || edu.grade
-        ) && (
-          <>
-            <h2>Education</h2>
-            {education.map(
-              (edu, i) =>
-                (edu.degree ||
-                  edu.institution ||
-                  isNumber(edu.year) ||
-                  edu.grade) && (
-                  <div key={i}>
-                    <p>
-                      <strong>{edu.degree}</strong> - {edu.institution}{" "}
-                      {isNumber(edu.year) && `(${edu.year})`}
-                    </p>
-                    {edu.grade && <p>Grade: {edu.grade}</p>}
-                  </div>
-                )
-            )}
-            <hr />
-          </>
-        )}
+      {education.some(
+        (edu) => edu.degree || edu.institution || isNumber(edu.year) || edu.grade
+      ) && (
+        <>
+          <h2>Education</h2>
+          {education.map(
+            (edu, i) =>
+              (edu.degree ||
+                edu.institution ||
+                isNumber(edu.year) ||
+                edu.grade) && (
+                <div key={i}>
+                  <p>
+                    <strong>{edu.degree}</strong> - {edu.institution}{" "}
+                    {isNumber(edu.year) && `(${edu.year})`}
+                  </p>
+                  {edu.grade && <p>Grade: {edu.grade}</p>}
+                </div>
+              )
+          )}
+          <hr />
+        </>
+      )}
 
       {/* Internships */}
-      {internships.length > 0 &&
-        internships.some(
-          (intern) =>
-            intern.company || intern.role || intern.duration || intern.description
-        ) && (
-          <>
-            <h2>Internships</h2>
-            {internships.map(
-              (intern, i) =>
-                (intern.company ||
-                  intern.role ||
-                  intern.duration ||
-                  intern.description) && (
-                  <div key={i}>
-                    <p>
-                      <strong>{intern.company}</strong> - {intern.role}
-                    </p>
-                    {intern.duration && <p>{intern.duration}</p>}
-                    {intern.description && <p>{intern.description}</p>}
-                  </div>
-                )
-            )}
-            <hr />
-          </>
-        )}
+      {internships.some(
+        (intern) =>
+          intern.company || intern.role || intern.duration || intern.description
+      ) && (
+        <>
+          <h2>Internships</h2>
+          {internships.map(
+            (intern, i) =>
+              (intern.company ||
+                intern.role ||
+                intern.duration ||
+                intern.description) && (
+                <div key={i}>
+                  <p>
+                    <strong>{intern.role}</strong> - {intern.company}
+                  </p>
+                  {intern.duration && <p>{intern.duration}</p>}
+                  {intern.description && <p>{intern.description}</p>}
+                </div>
+              )
+          )}
+          <hr />
+        </>
+      )}
 
       {/* Projects */}
-      {projects.length > 0 &&
-        projects.some((proj) => proj.title || proj.description || proj.link) && (
-          <>
-            <h2>Projects</h2>
-            {projects.map(
-              (proj, i) =>
-                (proj.title || proj.description || proj.link) && (
-                  <div key={i}>
-                    <p>
-                      <strong>{proj.title}</strong>
-                    </p>
-                    {proj.description && <p>{proj.description}</p>}
-                    {proj.link && (
-                      <a
-                        href={proj.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        View Project
-                      </a>
-                    )}
-                  </div>
-                )
-            )}
-            <hr />
-          </>
-        )}
+      {projects.some((proj) => proj.title || proj.description || proj.link) && (
+        <>
+          <h2>Projects</h2>
+          {projects.map(
+            (proj, i) =>
+              (proj.title || proj.description || proj.link) && (
+                <div key={i}>
+                  <p>
+                    <strong>{proj.title}</strong>
+                  </p>
+                  {proj.description && <p>{proj.description}</p>}
+                  {proj.link && (
+                    <a
+                      href={proj.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      View Project
+                    </a>
+                  )}
+                </div>
+              )
+          )}
+          <hr />
+        </>
+      )}
 
       {/* Technical Skills */}
-      {technicalSkills.length > 0 && (
+      {technicalSkills.some((s) => s) && (
         <>
           <h2>Technical Skills</h2>
           <ul>{technicalSkills.map((s, i) => s && <li key={i}>{s}</li>)}</ul>
@@ -199,7 +196,7 @@ const ExecutiveTemplate = ({ data = {} }) => {
       )}
 
       {/* Languages */}
-      {languages.length > 0 && (
+      {languages.some((l) => l) && (
         <>
           <h2>Languages</h2>
           <ul>{languages.map((l, i) => l && <li key={i}>{l}</li>)}</ul>
@@ -208,7 +205,7 @@ const ExecutiveTemplate = ({ data = {} }) => {
       )}
 
       {/* Strengths */}
-      {strengths.length > 0 && (
+      {strengths.some((s) => s) && (
         <>
           <h2>Strengths</h2>
           <ul>{strengths.map((s, i) => s && <li key={i}>{s}</li>)}</ul>
@@ -217,7 +214,7 @@ const ExecutiveTemplate = ({ data = {} }) => {
       )}
 
       {/* Hobbies */}
-      {hobbies.length > 0 && (
+      {hobbies.some((h) => h) && (
         <>
           <h2>Hobbies</h2>
           <ul>{hobbies.map((h, i) => h && <li key={i}>{h}</li>)}</ul>
@@ -226,7 +223,7 @@ const ExecutiveTemplate = ({ data = {} }) => {
       )}
 
       {/* Area of Interest */}
-      {areaOfInterest.length > 0 && (
+      {areaOfInterest.some((a) => a) && (
         <>
           <h2>Area of Interest</h2>
           <ul>{areaOfInterest.map((a, i) => a && <li key={i}>{a}</li>)}</ul>
@@ -253,7 +250,7 @@ const ExecutiveTemplate = ({ data = {} }) => {
       )}
 
       {/* Certifications */}
-      {certifications.length > 0 && (
+      {certifications.some((c) => c) && (
         <>
           <h2>Certifications</h2>
           <ul>{certifications.map((c, i) => c && <li key={i}>{c}</li>)}</ul>
@@ -261,8 +258,8 @@ const ExecutiveTemplate = ({ data = {} }) => {
         </>
       )}
 
-      {/* Achievements / Awards */}
-      {achievements.length > 0 && (
+      {/* Achievements */}
+      {achievements.some((a) => a) && (
         <>
           <h2>Achievements / Awards</h2>
           <ul>{achievements.map((a, i) => a && <li key={i}>{a}</li>)}</ul>
@@ -270,8 +267,8 @@ const ExecutiveTemplate = ({ data = {} }) => {
         </>
       )}
 
-      {/* Co-Curricular Activities */}
-      {coCurricular.length > 0 && (
+      {/* Co-Curricular */}
+      {coCurricular.some((c) => c) && (
         <>
           <h2>Co-Curricular Activities</h2>
           <ul>{coCurricular.map((c, i) => c && <li key={i}>{c}</li>)}</ul>
@@ -279,8 +276,8 @@ const ExecutiveTemplate = ({ data = {} }) => {
         </>
       )}
 
-      {/* Extra-Curricular Activities */}
-      {extraCurricular.length > 0 && (
+      {/* Extra-Curricular */}
+      {extraCurricular.some((c) => c) && (
         <>
           <h2>Extra-Curricular Activities</h2>
           <ul>{extraCurricular.map((c, i) => c && <li key={i}>{c}</li>)}</ul>
