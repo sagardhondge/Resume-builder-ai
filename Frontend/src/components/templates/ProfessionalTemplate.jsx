@@ -1,4 +1,3 @@
-// src/components/templates/ProfessionalTemplate.jsx
 import React from "react";
 
 const ProfessionalTemplate = ({ data = {} }) => {
@@ -37,15 +36,13 @@ const ProfessionalTemplate = ({ data = {} }) => {
   const isNumber = (value) => /^\d+$/.test(value);
 
   return (
-    <div style={{ fontFamily: "Georgia, serif", padding: "25px", lineHeight: "1.6" }}>
-      {/* ===== Basic Info ===== */}
+    <div style={{ fontFamily: "Georgia, serif", padding: "20px", lineHeight: "1.5" }}>
+      {/* Basic Info */}
       {hasBasicInfo && (
         <>
           {(basicInfo.firstName || basicInfo.lastName) && (
-            <h1 style={{ borderBottom: "2px solid #333", paddingBottom: "5px" }}>
-              {basicInfo.firstName}{" "}
-              {basicInfo.middleName && basicInfo.middleName + " "}
-              {basicInfo.lastName}
+            <h1>
+              {basicInfo.firstName} {basicInfo.middleName && basicInfo.middleName + " "} {basicInfo.lastName}
             </h1>
           )}
           <p>
@@ -64,27 +61,23 @@ const ProfessionalTemplate = ({ data = {} }) => {
               </>
             )}
             {basicInfo.portfolio && (
-              <a href={basicInfo.portfolio} target="_blank" rel="noopener noreferrer">Portfolio</a>
+              <>
+                <a href={basicInfo.portfolio} target="_blank" rel="noopener noreferrer">Portfolio</a>
+              </>
             )}
           </p>
           <hr />
         </>
       )}
 
-      {/* ===== Career Objective ===== */}
-      {careerObjective && (
-        <>
-          <h2 style={{ borderBottom: "1px solid #999" }}>Career Objective</h2>
-          <p>{careerObjective}</p>
-          <hr />
-        </>
-      )}
+      {/* Career Objective */}
+      {careerObjective && <><h2>Career Objective</h2><p>{careerObjective}</p><hr /></>}
 
-      {/* ===== Education ===== */}
+      {/* Education */}
       {education.length > 0 &&
         education.some((edu) => edu.degree || edu.institution || isNumber(edu.year) || edu.grade) && (
           <>
-            <h2 style={{ borderBottom: "1px solid #999" }}>Education</h2>
+            <h2>Education</h2>
             {education.map((edu, i) =>
               (edu.degree || edu.institution || isNumber(edu.year) || edu.grade) && (
                 <div key={i}>
@@ -97,96 +90,146 @@ const ProfessionalTemplate = ({ data = {} }) => {
           </>
         )}
 
-      {/* ===== Internships ===== */}
-      {internships.length > 0 && (
-        <>
-          <h2 style={{ borderBottom: "1px solid #999" }}>Internships</h2>
-          {internships.map((intern, i) =>
-            (intern.company || intern.role || intern.duration || intern.description) && (
-              <div key={i}>
-                <p><strong>{intern.company}</strong> - {intern.role}</p>
-                {intern.duration && <p>{intern.duration}</p>}
-                {intern.description && <p>{intern.description}</p>}
-              </div>
-            )
-          )}
-          <hr />
-        </>
-      )}
+      {/* Internships */}
+      {internships.length > 0 &&
+        internships.some((intern) => intern.company || intern.role || intern.duration || intern.description) && (
+          <>
+            <h2>Internships</h2>
+            {internships.map((intern, i) =>
+              (intern.company || intern.role || intern.duration || intern.description) && (
+                <div key={i}>
+                  <p><strong>{intern.company}</strong> - {intern.role}</p>
+                  {intern.duration && <p>{intern.duration}</p>}
+                  {intern.description && <p>{intern.description}</p>}
+                </div>
+              )
+            )}
+            <hr />
+          </>
+        )}
 
-      {/* ===== Projects ===== */}
-      {projects.length > 0 && (
-        <>
-          <h2 style={{ borderBottom: "1px solid #999" }}>Projects</h2>
-          {projects.map((proj, i) =>
-            (proj.title || proj.description || proj.link) && (
-              <div key={i}>
-                <p><strong>{proj.title}</strong></p>
-                {proj.description && <p>{proj.description}</p>}
-                {proj.link && <a href={proj.link} target="_blank" rel="noopener noreferrer">View Project</a>}
-              </div>
-            )
-          )}
-          <hr />
-        </>
-      )}
+      {/* Projects */}
+      {projects.length > 0 &&
+        projects.some((proj) => proj.title || proj.description || proj.link) && (
+          <>
+            <h2>Projects</h2>
+            {projects.map((proj, i) =>
+              (proj.title || proj.description || proj.link) && (
+                <div key={i}>
+                  <p><strong>{proj.title}</strong></p>
+                  {proj.description && <p>{proj.description}</p>}
+                  {proj.link && <a href={proj.link} target="_blank" rel="noopener noreferrer">View Project</a>}
+                </div>
+              )
+            )}
+            <hr />
+          </>
+        )}
 
-      {/* ===== Technical Skills ===== */}
+      {/* Technical Skills */}
       {technicalSkills.length > 0 && (
         <>
-          <h2 style={{ borderBottom: "1px solid #999" }}>Technical Skills</h2>
+          <h2>Technical Skills</h2>
           <ul>{technicalSkills.map((s, i) => s && <li key={i}>{s}</li>)}</ul>
           <hr />
         </>
       )}
 
-      {/* ===== Languages, Strengths, Hobbies ===== */}
+      {/* Languages */}
       {languages.length > 0 && (
         <>
-          <h2 style={{ borderBottom: "1px solid #999" }}>Languages</h2>
+          <h2>Languages</h2>
           <ul>{languages.map((l, i) => l && <li key={i}>{l}</li>)}</ul>
           <hr />
         </>
       )}
 
+      {/* Strengths */}
       {strengths.length > 0 && (
         <>
-          <h2 style={{ borderBottom: "1px solid #999" }}>Strengths</h2>
+          <h2>Strengths</h2>
           <ul>{strengths.map((s, i) => s && <li key={i}>{s}</li>)}</ul>
           <hr />
         </>
       )}
 
+      {/* Hobbies */}
       {hobbies.length > 0 && (
         <>
-          <h2 style={{ borderBottom: "1px solid #999" }}>Hobbies</h2>
+          <h2>Hobbies</h2>
           <ul>{hobbies.map((h, i) => h && <li key={i}>{h}</li>)}</ul>
           <hr />
         </>
       )}
 
-      {/* ===== Job Preferences, Family Background, Declaration ===== */}
+      {/* Area of Interest */}
+      {areaOfInterest.length > 0 && (
+        <>
+          <h2>Area of Interest</h2>
+          <ul>{areaOfInterest.map((a, i) => a && <li key={i}>{a}</li>)}</ul>
+          <hr />
+        </>
+      )}
+
+      {/* Job Preferences */}
       {jobPreferences && (
         <>
-          <h2 style={{ borderBottom: "1px solid #999" }}>Job Preferences</h2>
+          <h2>Job Preferences</h2>
           <p>{jobPreferences}</p>
           <hr />
         </>
       )}
 
+      {/* Family Background */}
       {familyBackground && (
         <>
-          <h2 style={{ borderBottom: "1px solid #999" }}>Family Background</h2>
+          <h2>Family Background</h2>
           <p>{familyBackground}</p>
           <hr />
         </>
       )}
 
+      {/* Certifications */}
+      {certifications.length > 0 && (
+        <>
+          <h2>Certifications</h2>
+          <ul>{certifications.map((c, i) => c && <li key={i}>{c}</li>)}</ul>
+          <hr />
+        </>
+      )}
+
+      {/* Achievements / Awards */}
+      {achievements.length > 0 && (
+        <>
+          <h2>Achievements / Awards</h2>
+          <ul>{achievements.map((a, i) => a && <li key={i}>{a}</li>)}</ul>
+          <hr />
+        </>
+      )}
+
+      {/* Co-Curricular Activities */}
+      {coCurricular.length > 0 && (
+        <>
+          <h2>Co-Curricular Activities</h2>
+          <ul>{coCurricular.map((c, i) => c && <li key={i}>{c}</li>)}</ul>
+          <hr />
+        </>
+      )}
+
+      {/* Extra-Curricular Activities */}
+      {extraCurricular.length > 0 && (
+        <>
+          <h2>Extra-Curricular Activities</h2>
+          <ul>{extraCurricular.map((c, i) => c && <li key={i}>{c}</li>)}</ul>
+          <hr />
+        </>
+      )}
+
+      {/* Declaration */}
       {declaration && (
         <>
-          <h2 style={{ borderBottom: "1px solid #999" }}>Declaration</h2>
+          <h2>Declaration</h2>
           <p>{declaration}</p>
-          <hr />
         </>
       )}
     </div>

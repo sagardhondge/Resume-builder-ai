@@ -4,6 +4,10 @@ import ClassicTemplate from "./templates/ClassicTemplate";
 import ModernTemplate from "./templates/ModernTemplate";
 import MinimalTemplate from "./templates/MinimalTemplate";
 import ProfessionalTemplate from "./templates/ProfessionalTemplate";
+import CreativeTemplate from "./templates/CreativeTemplate";
+import ExecutiveTemplate from "./templates/ExecutiveTemplate";
+import ModernMinimalTemplate from "./templates/ModernMinimalTemplate";
+
 const Templates = ({ data }) => {
   const [selectedTemplate, setSelectedTemplate] = useState("classic");
   const printRef = useRef(); // useful if you plan to use react-to-print
@@ -11,23 +15,29 @@ const Templates = ({ data }) => {
   // fallback demo data for preview if no real data is passed
   const demoData = {
     basicInfo: {
-      name: "John Doe",
+      firstName: "John",
+      middleName: "",
+      lastName: "Doe",
       email: "john.doe@email.com",
       phone: "+91 9876543210",
-      location: "Mumbai, India",
+      currentAddress: "Mumbai, India",
+      dob: "01/01/2000",
+      github: "https://github.com/johndoe",
+      linkedin: "https://linkedin.com/in/johndoe",
+      portfolio: "https://johndoe.com",
     },
     careerObjective:
       "To work in a dynamic organization where I can contribute my skills and grow professionally.",
     education: [
-      { degree: "B.Tech in Computer Science", institute: "IIT Bombay", year: "2024" },
-      { degree: "Higher Secondary", institute: "XYZ Junior College", year: "2020" },
+      { degree: "B.Tech in Computer Science", institute: "IIT Bombay", year: "2024", grade: "9.0 CGPA" },
+      { degree: "Higher Secondary", institute: "XYZ Junior College", year: "2020", grade: "88%" },
     ],
     internships: [
-      { company: "Tech Corp", role: "Frontend Intern", duration: "Jan 2023 - Jun 2023" },
+      { company: "Tech Corp", role: "Frontend Intern", duration: "Jan 2023 - Jun 2023", description: "Worked on UI development." },
     ],
     projects: [
-      { name: "Chat Application", description: "A real-time chat app using MERN stack." },
-      { name: "Resume Builder AI", description: "AI-powered resume generation tool." },
+      { title: "Chat Application", description: "A real-time chat app using MERN stack.", link: "" },
+      { title: "Resume Builder AI", description: "AI-powered resume generation tool.", link: "" },
     ],
     technicalSkills: ["React", "Node.js", "MongoDB", "Tailwind CSS", "C++"],
     certifications: ["AWS Cloud Practitioner", "Google Data Analytics"],
@@ -39,32 +49,33 @@ const Templates = ({ data }) => {
     hobbies: ["Reading", "Gaming", "Traveling"],
     declaration:
       "I hereby declare that the above information is true to the best of my knowledge.",
-    areaOfInterest: "",
-    jobPreferences: "",
-    familyBackground: "",
+    areaOfInterest: ["AI", "Web Development"],
+    jobPreferences: "Full-time Software Developer role",
+    familyBackground: "Father: John Sr., Mother: Jane Doe",
   };
 
-  // Use provided data if valid, else fallback to demo
   const finalData = data && Object.keys(data).length > 0 ? data : demoData;
 
+  const templatesMap = {
+    classic: ClassicTemplate,
+    modern: ModernTemplate,
+    minimal: MinimalTemplate,
+    professional: ProfessionalTemplate,
+    creative: CreativeTemplate,
+    executive: ExecutiveTemplate,
+    modernminimal: ModernMinimalTemplate,
+  };
+
   const renderTemplate = () => {
-    switch (selectedTemplate) {
-      case "classic":
-        return <ClassicTemplate ref={printRef} data={finalData} />;
-      case "modern":
-        return <ModernTemplate ref={printRef} data={finalData} />;
-      case "minimal":
-        return <MinimalTemplate ref={printRef} data={finalData} />;
-      default:
-        return <ClassicTemplate ref={printRef} data={finalData} />;
-    }
+    const TemplateComponent = templatesMap[selectedTemplate] || ClassicTemplate;
+    return <TemplateComponent ref={printRef} data={finalData} />;
   };
 
   return (
     <div>
       {/* Template Picker */}
-      <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
-        {["classic", "modern", "minimal"].map((tpl) => (
+      <div style={{ display: "flex", gap: "10px", marginBottom: "20px", flexWrap: "wrap" }}>
+        {Object.keys(templatesMap).map((tpl) => (
           <button
             key={tpl}
             onClick={() => setSelectedTemplate(tpl)}
@@ -73,7 +84,16 @@ const Templates = ({ data }) => {
               border: "1px solid #ddd",
               borderRadius: "4px",
               cursor: "pointer",
-              backgroundColor: selectedTemplate === tpl ? (tpl === "classic" ? "#007bff" : tpl === "modern" ? "#28a745" : "#6c757d") : "#f9f9f9",
+              backgroundColor:
+                selectedTemplate === tpl
+                  ? tpl === "classic"
+                    ? "#007bff"
+                    : tpl === "modern"
+                    ? "#28a745"
+                    : tpl === "minimal"
+                    ? "#6c757d"
+                    : "#17a2b8"
+                  : "#f9f9f9",
               color: selectedTemplate === tpl ? "#fff" : "#333",
             }}
           >
