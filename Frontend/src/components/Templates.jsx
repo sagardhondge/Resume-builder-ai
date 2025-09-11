@@ -3,7 +3,7 @@ import React, { useState, useRef } from "react";
 import ClassicTemplate from "./templates/ClassicTemplate";
 import ModernTemplate from "./templates/ModernTemplate";
 import MinimalTemplate from "./templates/MinimalTemplate";
-
+import ProfessionalTemplate from "./templates/ProfessionalTemplate";
 const Templates = ({ data }) => {
   const [selectedTemplate, setSelectedTemplate] = useState("classic");
   const printRef = useRef(); // useful if you plan to use react-to-print
