@@ -1,6 +1,7 @@
+// src/components/templates/ProfessionalTemplate.jsx
 import React from "react";
 
-const ClassicTemplate = ({ data = {} }) => {
+const ProfessionalTemplate = ({ data = {} }) => {
   const {
     basicInfo = {},
     careerObjective,
@@ -36,7 +37,7 @@ const ClassicTemplate = ({ data = {} }) => {
   const isNumber = (value) => /^\d+$/.test(value);
 
   return (
-    <div style={{ fontFamily: "Times New Roman", padding: "20px", lineHeight: "1.6" }}>
+    <div style={{ fontFamily: "Arial, sans-serif", padding: "20px", lineHeight: "1.6" }}>
       {/* ===== Basic Info ===== */}
       {hasBasicInfo && (
         <>
@@ -286,4 +287,4 @@ const ClassicTemplate = ({ data = {} }) => {
   );
 };
 
-export default ClassicTemplate;
+export default ProfessionalTemplate;

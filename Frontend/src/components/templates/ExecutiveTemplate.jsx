@@ -36,28 +36,62 @@ const ExecutiveTemplate = ({ data = {} }) => {
   const isNumber = (value) => /^\d+$/.test(value);
 
   return (
-    <div style={{ fontFamily: "'Georgia', serif", padding: "30px", lineHeight: "1.6", color: "#1a1a1a" }}>
-      {/* Header */}
+    <div
+      style={{
+        fontFamily: "'Georgia', serif",
+        padding: "30px",
+        lineHeight: "1.6",
+        color: "#1a1a1a",
+        background: "#fff",
+      }}
+    >
+      {/* Basic Info */}
       {hasBasicInfo && (
         <>
           {(basicInfo.firstName || basicInfo.lastName) && (
             <h1 style={{ textAlign: "center", fontSize: "32px" }}>
-              {basicInfo.firstName} {basicInfo.middleName && basicInfo.middleName + " "} {basicInfo.lastName}
+              {basicInfo.firstName}{" "}
+              {basicInfo.middleName && basicInfo.middleName + " "}
+              {basicInfo.lastName}
             </h1>
           )}
           <p style={{ textAlign: "center", fontStyle: "italic" }}>
-            {basicInfo.email && <> {basicInfo.email} | </>}
-            {basicInfo.phone && <> {basicInfo.phone} | </>}
-            {basicInfo.currentAddress && <> {basicInfo.currentAddress} | </>}
-            {basicInfo.dob && <> {basicInfo.dob} | </>}
+            {basicInfo.email && <>{basicInfo.email} | </>}
+            {basicInfo.phone && <>{basicInfo.phone} | </>}
+            {basicInfo.currentAddress && <>{basicInfo.currentAddress} | </>}
+            {basicInfo.dob && <>{basicInfo.dob} | </>}
             {basicInfo.github && (
-              <a href={basicInfo.github} target="_blank" rel="noopener noreferrer">GitHub</a>
+              <>
+                <a
+                  href={basicInfo.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  GitHub
+                </a>{" "}
+                |{" "}
+              </>
             )}
             {basicInfo.linkedin && (
-              <> | <a href={basicInfo.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a></>
+              <>
+                <a
+                  href={basicInfo.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  LinkedIn
+                </a>{" "}
+                |{" "}
+              </>
             )}
             {basicInfo.portfolio && (
-              <> | <a href={basicInfo.portfolio} target="_blank" rel="noopener noreferrer">Portfolio</a></>
+              <a
+                href={basicInfo.portfolio}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Portfolio
+              </a>
             )}
           </p>
           <hr style={{ border: "2px solid #1a1a1a" }} />
@@ -65,57 +99,95 @@ const ExecutiveTemplate = ({ data = {} }) => {
       )}
 
       {/* Career Objective */}
-      {careerObjective && <><h2>Career Objective</h2><p>{careerObjective}</p><hr /></>}
+      {careerObjective && (
+        <>
+          <h2>Career Objective</h2>
+          <p>{careerObjective}</p>
+          <hr />
+        </>
+      )}
 
       {/* Education */}
-      {education.length > 0 && (
-        <>
-          <h2>Education</h2>
-          {education.map((edu, i) =>
-            (edu.degree || edu.institution || isNumber(edu.year) || edu.grade) && (
-              <div key={i}>
-                <p><strong>{edu.degree}</strong> - {edu.institution} {isNumber(edu.year) && `(${edu.year})`}</p>
-                {edu.grade && <p>Grade: {edu.grade}</p>}
-              </div>
-            )
-          )}
-          <hr />
-        </>
-      )}
+      {education.length > 0 &&
+        education.some(
+          (edu) => edu.degree || edu.institution || isNumber(edu.year) || edu.grade
+        ) && (
+          <>
+            <h2>Education</h2>
+            {education.map(
+              (edu, i) =>
+                (edu.degree ||
+                  edu.institution ||
+                  isNumber(edu.year) ||
+                  edu.grade) && (
+                  <div key={i}>
+                    <p>
+                      <strong>{edu.degree}</strong> - {edu.institution}{" "}
+                      {isNumber(edu.year) && `(${edu.year})`}
+                    </p>
+                    {edu.grade && <p>Grade: {edu.grade}</p>}
+                  </div>
+                )
+            )}
+            <hr />
+          </>
+        )}
 
       {/* Internships */}
-      {internships.length > 0 && (
-        <>
-          <h2>Internships</h2>
-          {internships.map((intern, i) =>
-            (intern.company || intern.role || intern.duration || intern.description) && (
-              <div key={i}>
-                <p><strong>{intern.company}</strong> - {intern.role}</p>
-                {intern.duration && <p>{intern.duration}</p>}
-                {intern.description && <p>{intern.description}</p>}
-              </div>
-            )
-          )}
-          <hr />
-        </>
-      )}
+      {internships.length > 0 &&
+        internships.some(
+          (intern) =>
+            intern.company || intern.role || intern.duration || intern.description
+        ) && (
+          <>
+            <h2>Internships</h2>
+            {internships.map(
+              (intern, i) =>
+                (intern.company ||
+                  intern.role ||
+                  intern.duration ||
+                  intern.description) && (
+                  <div key={i}>
+                    <p>
+                      <strong>{intern.company}</strong> - {intern.role}
+                    </p>
+                    {intern.duration && <p>{intern.duration}</p>}
+                    {intern.description && <p>{intern.description}</p>}
+                  </div>
+                )
+            )}
+            <hr />
+          </>
+        )}
 
       {/* Projects */}
-      {projects.length > 0 && (
-        <>
-          <h2>Projects</h2>
-          {projects.map((proj, i) =>
-            (proj.title || proj.description || proj.link) && (
-              <div key={i}>
-                <p><strong>{proj.title}</strong></p>
-                {proj.description && <p>{proj.description}</p>}
-                {proj.link && <a href={proj.link} target="_blank" rel="noopener noreferrer">View Project</a>}
-              </div>
-            )
-          )}
-          <hr />
-        </>
-      )}
+      {projects.length > 0 &&
+        projects.some((proj) => proj.title || proj.description || proj.link) && (
+          <>
+            <h2>Projects</h2>
+            {projects.map(
+              (proj, i) =>
+                (proj.title || proj.description || proj.link) && (
+                  <div key={i}>
+                    <p>
+                      <strong>{proj.title}</strong>
+                    </p>
+                    {proj.description && <p>{proj.description}</p>}
+                    {proj.link && (
+                      <a
+                        href={proj.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        View Project
+                      </a>
+                    )}
+                  </div>
+                )
+            )}
+            <hr />
+          </>
+        )}
 
       {/* Technical Skills */}
       {technicalSkills.length > 0 && (
@@ -163,10 +235,22 @@ const ExecutiveTemplate = ({ data = {} }) => {
       )}
 
       {/* Job Preferences */}
-      {jobPreferences && <><h2>Job Preferences</h2><p>{jobPreferences}</p><hr /></>}
+      {jobPreferences && (
+        <>
+          <h2>Job Preferences</h2>
+          <p>{jobPreferences}</p>
+          <hr />
+        </>
+      )}
 
       {/* Family Background */}
-      {familyBackground && <><h2>Family Background</h2><p>{familyBackground}</p><hr /></>}
+      {familyBackground && (
+        <>
+          <h2>Family Background</h2>
+          <p>{familyBackground}</p>
+          <hr />
+        </>
+      )}
 
       {/* Certifications */}
       {certifications.length > 0 && (
@@ -205,7 +289,12 @@ const ExecutiveTemplate = ({ data = {} }) => {
       )}
 
       {/* Declaration */}
-      {declaration && <><h2>Declaration</h2><p>{declaration}</p></>}
+      {declaration && (
+        <>
+          <h2>Declaration</h2>
+          <p>{declaration}</p>
+        </>
+      )}
     </div>
   );
 };
