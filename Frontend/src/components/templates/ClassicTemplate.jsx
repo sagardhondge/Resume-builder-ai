@@ -1,155 +1,270 @@
 import React from "react";
 
-const ClassicTemplate = ({ data }) => {
-  if (!data) return null;
-
+const ClassicTemplate = ({ data = {} }) => {
   const {
-    basicInfo,
+    basicInfo = {},
     careerObjective,
-    education,
-    internships,
-    projects,
-    technicalSkills,
-    certifications,
-    achievements,
-    coCurricular,
-    extraCurricular,
+    education = [],
+    internships = [],
+    projects = [],
+    technicalSkills = [],
+    certifications = [],
+    achievements = [],
+    coCurricular = [],
+    extraCurricular = [],
+    declaration,
+    // ✅ newly added fields
+    languages = [],
+    strengths = [],
+    hobbies = [],
+    areaOfInterest = [],
+    jobPreferences,
+    familyBackground,
   } = data;
 
-  return (
-    <div
-      style={{
-        fontFamily: "Arial, sans-serif",
-        padding: "20px",
-        lineHeight: "1.5",
-        maxWidth: "800px",
-        margin: "auto",
-        border: "1px solid #ddd",
-      }}
-    >
-      {/* Basic Info */}
-      <h1 style={{ margin: "0", fontSize: "28px" }}>{basicInfo?.fullName}</h1>
-      <p style={{ margin: "5px 0" }}>
-        📧 {basicInfo?.email} | 📞 {basicInfo?.phone} | 📍 {basicInfo?.location}
-      </p>
-      <hr style={{ margin: "10px 0" }} />
+  const hasBasicInfo =
+    basicInfo.firstName ||
+    basicInfo.lastName ||
+    basicInfo.middleName ||
+    basicInfo.email ||
+    basicInfo.phone ||
+    basicInfo.currentAddress ||
+    basicInfo.dob ||
+    basicInfo.github ||
+    basicInfo.linkedin ||
+    basicInfo.portfolio;
 
-      {/* Career Objective */}
-      {careerObjective && (
+  const hasValidEntries = (arr, keys) =>
+    Array.isArray(arr) &&
+    arr.some((item) =>
+      keys.some((key) => item[key] && item[key].toString().trim() !== "")
+    );
+
+  return (
+    <div style={{ fontFamily: "Times New Roman", padding: "20px", lineHeight: "1.6" }}>
+      {/* ===== Basic Info ===== */}
+      {hasBasicInfo && (
         <>
-          <h2 style={{ fontSize: "18px", marginBottom: "5px" }}>
-            Career Objective
-          </h2>
+          {(basicInfo.firstName || basicInfo.lastName) && (
+            <h1>
+              {basicInfo.firstName}{" "}
+              {basicInfo.middleName && basicInfo.middleName + " "}
+              {basicInfo.lastName}
+            </h1>
+          )}
+
+          <p>
+            {basicInfo.email && <> {basicInfo.email} | </>}
+            {basicInfo.phone && <> {basicInfo.phone} | </>}
+            {basicInfo.currentAddress && <> {basicInfo.currentAddress} | </>}
+            {basicInfo.dob && <> {basicInfo.dob} | </>}
+            {basicInfo.github && (
+              <>
+                <a href={basicInfo.github} target="_blank" rel="noopener noreferrer">
+                  GitHub
+                </a>{" "}
+                |{" "}
+              </>
+            )}
+            {basicInfo.linkedin && (
+              <>
+                <a href={basicInfo.linkedin} target="_blank" rel="noopener noreferrer">
+                  LinkedIn
+                </a>{" "}
+                |{" "}
+              </>
+            )}
+            {basicInfo.portfolio && (
+              <>
+                <a href={basicInfo.portfolio} target="_blank" rel="noopener noreferrer">
+                  Portfolio
+                </a>
+              </>
+            )}
+          </p>
+          <hr />
+        </>
+      )}
+
+      {/* ===== Career Objective ===== */}
+      {careerObjective && careerObjective.trim() !== "" && (
+        <>
+          <h2>Career Objective</h2>
           <p>{careerObjective}</p>
         </>
       )}
 
-      {/* Education */}
-      {education?.length > 0 && (
+      {/* ===== Education ===== */}
+      {hasValidEntries(education, ["degree", "institution", "year", "grade"]) && (
         <>
-          <h2 style={{ fontSize: "18px", marginBottom: "5px" }}>Education</h2>
+          <h2>Education</h2>
+          {education.map(
+            (edu, i) =>
+              (edu.degree || edu.institution || edu.year || edu.grade) && (
+                <div key={i}>
+                  <p>
+                    <strong>{edu.degree}</strong> - {edu.institution} ({edu.year})
+                  </p>
+                  {edu.grade && <p>Grade: {edu.grade}</p>}
+                </div>
+              )
+          )}
+        </>
+      )}
+
+      {/* ===== Internships ===== */}
+      {hasValidEntries(internships, ["company", "role", "duration", "description"]) && (
+        <>
+          <h2>Internships</h2>
+          {internships.map(
+            (intern, i) =>
+              (intern.company || intern.role || intern.duration || intern.description) && (
+                <div key={i}>
+                  <p>
+                    <strong>{intern.company}</strong> - {intern.role}
+                  </p>
+                  {intern.duration && <p>{intern.duration}</p>}
+                  {intern.description && <p>{intern.description}</p>}
+                </div>
+              )
+          )}
+        </>
+      )}
+
+      {/* ===== Projects ===== */}
+      {hasValidEntries(projects, ["title", "description", "link"]) && (
+        <>
+          <h2>Projects</h2>
+          {projects.map(
+            (proj, i) =>
+              (proj.title || proj.description || proj.link) && (
+                <div key={i}>
+                  <p>
+                    <strong>{proj.title}</strong>
+                  </p>
+                  {proj.description && <p>{proj.description}</p>}
+                  {proj.link && (
+                    <a href={proj.link} target="_blank" rel="noopener noreferrer">
+                      View Project
+                    </a>
+                  )}
+                </div>
+              )
+          )}
+        </>
+      )}
+
+      {/* ===== Technical Skills ===== */}
+      {technicalSkills.length > 0 && technicalSkills.some((s) => s && s.trim() !== "") && (
+        <>
+          <h2>Technical Skills</h2>
           <ul>
-            {education.map((edu, idx) => (
-              <li key={idx}>
-                <strong>{edu.degree}</strong> - {edu.institution} ({edu.year})
-              </li>
-            ))}
+            {technicalSkills.map((skill, i) => skill && <li key={i}>{skill}</li>)}
           </ul>
         </>
       )}
 
-      {/* Internships */}
-      {internships?.length > 0 && (
+      {/* ===== Languages ===== */}
+      {languages.length > 0 && languages.some((l) => l && l.trim() !== "") && (
         <>
-          <h2 style={{ fontSize: "18px", marginBottom: "5px" }}>Internships</h2>
+          <h2>Languages</h2>
           <ul>
-            {internships.map((intern, idx) => (
-              <li key={idx}>
-                <strong>{intern.company}</strong> - {intern.role} (
-                {intern.duration})
-              </li>
-            ))}
+            {languages.map((lang, i) => lang && <li key={i}>{lang}</li>)}
           </ul>
         </>
       )}
 
-      {/* Projects */}
-      {projects?.length > 0 && (
+      {/* ===== Strengths ===== */}
+      {strengths.length > 0 && strengths.some((s) => s && s.trim() !== "") && (
         <>
-          <h2 style={{ fontSize: "18px", marginBottom: "5px" }}>Projects</h2>
+          <h2>Strengths</h2>
           <ul>
-            {projects.map((proj, idx) => (
-              <li key={idx}>
-                <strong>{proj.title}</strong> - {proj.description}
-              </li>
-            ))}
+            {strengths.map((st, i) => st && <li key={i}>{st}</li>)}
           </ul>
         </>
       )}
 
-      {/* Technical Skills */}
-      {technicalSkills?.length > 0 && (
+      {/* ===== Hobbies ===== */}
+      {hobbies.length > 0 && hobbies.some((h) => h && h.trim() !== "") && (
         <>
-          <h2 style={{ fontSize: "18px", marginBottom: "5px" }}>
-            Technical Skills
-          </h2>
-          <p>{technicalSkills.join(", ")}</p>
-        </>
-      )}
-
-      {/* Certifications */}
-      {certifications?.length > 0 && (
-        <>
-          <h2 style={{ fontSize: "18px", marginBottom: "5px" }}>
-            Certifications
-          </h2>
+          <h2>Hobbies</h2>
           <ul>
-            {certifications.map((cert, idx) => (
-              <li key={idx}>{cert}</li>
-            ))}
+            {hobbies.map((hb, i) => hb && <li key={i}>{hb}</li>)}
           </ul>
         </>
       )}
 
-      {/* Achievements */}
-      {achievements?.length > 0 && (
+      {/* ===== Area of Interest ===== */}
+      {areaOfInterest.length > 0 && areaOfInterest.some((a) => a && a.trim() !== "") && (
         <>
-          <h2 style={{ fontSize: "18px", marginBottom: "5px" }}>
-            Achievements / Awards
-          </h2>
+          <h2>Area of Interest</h2>
           <ul>
-            {achievements.map((ach, idx) => (
-              <li key={idx}>{ach}</li>
-            ))}
+            {areaOfInterest.map((area, i) => area && <li key={i}>{area}</li>)}
           </ul>
         </>
       )}
 
-      {/* Co-Curricular Activities */}
-      {coCurricular?.length > 0 && (
+      {/* ===== Job Preferences ===== */}
+      {jobPreferences && jobPreferences.trim() !== "" && (
         <>
-          <h2 style={{ fontSize: "18px", marginBottom: "5px" }}>
-            Co-Curricular Activities
-          </h2>
+          <h2>Job Preferences</h2>
+          <p>{jobPreferences}</p>
+        </>
+      )}
+
+      {/* ===== Family Background ===== */}
+      {familyBackground && familyBackground.trim() !== "" && (
+        <>
+          <h2>Family Background</h2>
+          <p>{familyBackground}</p>
+        </>
+      )}
+
+      {/* ===== Certifications ===== */}
+      {certifications.length > 0 && certifications.some((c) => c && c.trim() !== "") && (
+        <>
+          <h2>Certifications</h2>
           <ul>
-            {coCurricular.map((activity, idx) => (
-              <li key={idx}>{activity}</li>
-            ))}
+            {certifications.map((cert, i) => cert && <li key={i}>{cert}</li>)}
           </ul>
         </>
       )}
 
-      {/* Extra-Curricular Activities */}
-      {extraCurricular?.length > 0 && (
+      {/* ===== Achievements ===== */}
+      {achievements.length > 0 && achievements.some((a) => a && a.trim() !== "") && (
         <>
-          <h2 style={{ fontSize: "18px", marginBottom: "5px" }}>
-            Extra-Curricular Activities
-          </h2>
+          <h2>Achievements / Awards</h2>
           <ul>
-            {extraCurricular.map((activity, idx) => (
-              <li key={idx}>{activity}</li>
-            ))}
+            {achievements.map((ach, i) => ach && <li key={i}>{ach}</li>)}
           </ul>
+        </>
+      )}
+
+      {/* ===== Co-Curricular ===== */}
+      {coCurricular.length > 0 && coCurricular.some((c) => c && c.trim() !== "") && (
+        <>
+          <h2>Co-Curricular Activities</h2>
+          <ul>
+            {coCurricular.map((act, i) => act && <li key={i}>{act}</li>)}
+          </ul>
+        </>
+      )}
+
+      {/* ===== Extra-Curricular ===== */}
+      {extraCurricular.length > 0 && extraCurricular.some((c) => c && c.trim() !== "") && (
+        <>
+          <h2>Extra-Curricular Activities</h2>
+          <ul>
+            {extraCurricular.map((act, i) => act && <li key={i}>{act}</li>)}
+          </ul>
+        </>
+      )}
+
+      {/* ===== Declaration ===== */}
+      {declaration && declaration.trim() !== "" && (
+        <>
+          <h2>Declaration</h2>
+          <p>{declaration}</p>
         </>
       )}
     </div>

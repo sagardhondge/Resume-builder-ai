@@ -1,4 +1,3 @@
-// src/pages/ResumeBuilder.jsx
 import React, { useState, useRef } from "react";
 import { useReactToPrint } from "react-to-print";
 import Templates from "../components/Templates";
@@ -25,6 +24,8 @@ const sections = [
 
 const ResumeBuilder = () => {
   const [currentStep, setCurrentStep] = useState(0);
+  const [selectedTemplate, setSelectedTemplate] = useState("classic"); // ✅ Default Classic
+  const [showPreview, setShowPreview] = useState(false); // ✅ Toggle preview
   const [form, setForm] = useState({
     basicInfo: {
       firstName: "",
@@ -39,6 +40,7 @@ const ResumeBuilder = () => {
       permanentAddress: "",
       linkedin: "",
       github: "",
+      portfolio: "",
     },
     careerObjective: "",
     education: [{ degree: "", institution: "", year: "", grade: "" }],
@@ -86,6 +88,15 @@ const ResumeBuilder = () => {
     content: () => resumeRef.current,
   });
 
+  const handleDownload = () => {
+    const token = localStorage.getItem("token"); // ✅ Check login
+    if (!token) {
+      alert("⚠️ Please login to download your resume.");
+      return;
+    }
+    handlePrint();
+  };
+
   const nextStep = () =>
     setCurrentStep((prev) => (prev < sections.length - 1 ? prev + 1 : prev));
   const skipStep = () =>
@@ -95,15 +106,21 @@ const ResumeBuilder = () => {
   return (
     <div className="container py-4">
       {/* Header Buttons */}
-      <div className="d-flex justify-content-between mb-4">
-        <button className="btn btn-success" onClick={handlePrint}>
-          Preview / Download Resume
+      <div className="d-flex justify-content-between mb-4 gap-2">
+        <button className="btn btn-info" onClick={() => setShowPreview(true)}>
+           Preview Resume
+        </button>
+        <button className="btn btn-success" onClick={handleDownload}>
+           Download Resume
         </button>
         <button
           className="btn btn-primary"
-          onClick={() => setCurrentStep(0)}
+          onClick={() => {
+            setShowPreview(false);
+            setCurrentStep(0);
+          }}
         >
-          Change Template
+           Select Template
         </button>
       </div>
 
@@ -203,15 +220,25 @@ const ResumeBuilder = () => {
             <div className="col-md-6">
               <input
                 className="form-control"
-                placeholder="GitHub / Portfolio"
+                placeholder="GitHub Profile"
                 value={form.basicInfo.github}
                 onChange={(e) =>
                   handleChange("basicInfo", "github", e.target.value)
                 }
               />
             </div>
-            <div className="col-12">
-              <textarea
+                        <div className="col-md-6">
+              <input
+                className="form-control"
+                placeholder=" Portfolio"
+                value={form.basicInfo.portfolio}
+                onChange={(e) =>
+                  handleChange("basicInfo", "portfolio", e.target.value)
+                }
+              />
+            </div>
+            <div className="col-md-6">
+              <input
                 className="form-control"
                 placeholder="Current Address"
                 value={form.basicInfo.currentAddress}
@@ -487,10 +514,9 @@ const ResumeBuilder = () => {
             onChange={(e) => handleChange("declaration", null, e.target.value)}
           />
         )}
-      </div>
+      </div>  {/* <-- closes .card */}
 
       {/* Navigation Buttons */}
-    {/* Navigation Buttons */}
       <div className="d-flex justify-content-between mt-4">
         {currentStep > 0 && (
           <button className="btn btn-secondary" onClick={prevStep}>
@@ -520,12 +546,15 @@ const ResumeBuilder = () => {
         )}
       </div>
 
-      {/* Hidden Resume Preview for Printing */}
-      <div style={{ display: "none" }}>
-        <div ref={resumeRef}>
-          <Templates data={form} />
+      {/* Live Preview Section */}
+      {showPreview && (
+        <div className="mt-4 border p-3 bg-light rounded">
+          <h4 className="text-center">Live Resume Preview</h4>
+          <div ref={resumeRef}>
+            <Templates data={form} selectedTemplate={selectedTemplate} />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

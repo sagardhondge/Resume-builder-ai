@@ -1,151 +1,107 @@
-import React from "react";
+import React, { useState } from "react";
+import ClassicTemplate from "./templates/ClassicTemplate";
+import ModernTemplate from "./templates/ModernTemplate";
+import MinimalTemplate from "./templates/MinimalTemplate";
 
-const Templates = ({ data = {} }) => {
+const Templates = ({ data }) => {
+  const [selectedTemplate, setSelectedTemplate] = useState("classic");
+
+  // fallback demo data for preview if no real data is passed
+  const demoData = {
+    basicInfo: {
+      fullName: "John Doe",
+      email: "john.doe@email.com",
+      phone: "+91 9876543210",
+      location: "Mumbai, India",
+    },
+    careerObjective:
+      "To work in a dynamic organization where I can contribute my skills and grow professionally.",
+    education: [
+      { degree: "B.Tech in Computer Science", institution: "IIT Bombay", year: "2024" },
+      { degree: "Higher Secondary", institution: "XYZ Junior College", year: "2020" },
+    ],
+    internships: [
+      { company: "Tech Corp", role: "Frontend Intern", duration: "Jan 2023 - Jun 2023" },
+    ],
+    projects: [
+      { title: "Chat Application", description: "A real-time chat app using MERN stack." },
+      { title: "Resume Builder AI", description: "AI-powered resume generation tool." },
+    ],
+    technicalSkills: ["React", "Node.js", "MongoDB", "Tailwind CSS", "C++"],
+    certifications: ["AWS Cloud Practitioner", "Google Data Analytics"],
+    achievements: ["1st Prize - Hackathon 2023", "Dean's List - 2022"],
+    coCurricular: ["Member - Coding Club", "Organized Tech Fest"],
+    extraCurricular: ["Football Team Captain", "Volunteered at NGO"],
+    languages: ["English", "Hindi", "Marathi"],
+    strengths: ["Problem Solving", "Team Player", "Leadership"],
+    hobbies: ["Reading", "Gaming", "Traveling"],
+    declaration: "I hereby declare that the above information is true to the best of my knowledge.",
+  };
+
+  const finalData = data && Object.keys(data).length > 0 ? data : demoData;
+
+  const renderTemplate = () => {
+    switch (selectedTemplate) {
+      case "classic":
+        return <ClassicTemplate data={finalData} />;
+      case "modern":
+        return <ModernTemplate data={finalData} />;
+      case "minimal":
+        return <MinimalTemplate data={finalData} />;
+      default:
+        return <ClassicTemplate data={finalData} />;
+    }
+  };
+
   return (
-    <div style={{ fontFamily: "Arial", padding: "20px", lineHeight: "1.6" }}>
-      {/* Basic Info */}
-      <h1>{data.name || "Your Name"}</h1>
-      <p>{data.email || "your@email.com"} | {data.phone || "123-456-7890"}</p>
-      <hr />
+    <div>
+      {/* Template Picker */}
+      <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
+        <button
+          onClick={() => setSelectedTemplate("classic")}
+          style={{
+            padding: "8px 16px",
+            border: "1px solid #ddd",
+            backgroundColor: selectedTemplate === "classic" ? "#007bff" : "#f9f9f9",
+            color: selectedTemplate === "classic" ? "#fff" : "#333",
+            cursor: "pointer",
+            borderRadius: "4px",
+          }}
+        >
+          Classic
+        </button>
 
-      {/* Career Objective */}
-      {data.careerObjective && (
-        <>
-          <h2>Career Objective</h2>
-          <p>{data.careerObjective}</p>
-        </>
-      )}
+        <button
+          onClick={() => setSelectedTemplate("modern")}
+          style={{
+            padding: "8px 16px",
+            border: "1px solid #ddd",
+            backgroundColor: selectedTemplate === "modern" ? "#28a745" : "#f9f9f9",
+            color: selectedTemplate === "modern" ? "#fff" : "#333",
+            cursor: "pointer",
+            borderRadius: "4px",
+          }}
+        >
+          Modern
+        </button>
 
-      {/* Skills */}
-      <h2>Skills</h2>
-      <ul>
-        {data.skills && data.skills.length > 0 ? (
-          data.skills.map((skill, i) => <li key={i}>{skill}</li>)
-        ) : (
-          <li>Add your skills</li>
-        )}
-      </ul>
+        <button
+          onClick={() => setSelectedTemplate("minimal")}
+          style={{
+            padding: "8px 16px",
+            border: "1px solid #ddd",
+            backgroundColor: selectedTemplate === "minimal" ? "#6c757d" : "#f9f9f9",
+            color: selectedTemplate === "minimal" ? "#fff" : "#333",
+            cursor: "pointer",
+            borderRadius: "4px",
+          }}
+        >
+          Minimal
+        </button>
+      </div>
 
-      {/* Experience / Internships */}
-      {data.internships && data.internships.length > 0 && (
-        <>
-          <h2>Internships</h2>
-          {data.internships.map((intern, i) => (
-            <div key={i}>
-              <p><strong>{intern.company}</strong> - {intern.role}</p>
-              <p>{intern.duration}</p>
-              <p>{intern.description}</p>
-            </div>
-          ))}
-        </>
-      )}
-
-      {/* Education */}
-      {data.education && data.education.length > 0 && (
-        <>
-          <h2>Education</h2>
-          {data.education.map((edu, i) => (
-            <div key={i}>
-              <p>
-                <strong>{edu.degree}</strong> - {edu.institution} ({edu.year})
-              </p>
-              <p>{edu.grade}</p>
-            </div>
-          ))}
-        </>
-      )}
-
-      {/* Projects */}
-      {data.projects && data.projects.length > 0 && (
-        <>
-          <h2>Projects</h2>
-          {data.projects.map((proj, i) => (
-            <div key={i}>
-              <p><strong>{proj.title}</strong></p>
-              <p>{proj.description}</p>
-              {proj.link && <a href={proj.link}>{proj.link}</a>}
-            </div>
-          ))}
-        </>
-      )}
-
-      {/* Certifications */}
-      {data.certifications && data.certifications.length > 0 && (
-        <>
-          <h2>Certifications</h2>
-          <ul>
-            {data.certifications.map((cert, i) => <li key={i}>{cert}</li>)}
-          </ul>
-        </>
-      )}
-
-      {/* Achievements */}
-      {data.achievements && data.achievements.length > 0 && (
-        <>
-          <h2>Achievements</h2>
-          <ul>
-            {data.achievements.map((ach, i) => <li key={i}>{ach}</li>)}
-          </ul>
-        </>
-      )}
-
-      {/* Co-Curricular Activities */}
-      {data.coCurricular && data.coCurricular.length > 0 && (
-        <>
-          <h2>Co-Curricular Activities</h2>
-          <ul>
-            {data.coCurricular.map((item, i) => <li key={i}>{item}</li>)}
-          </ul>
-        </>
-      )}
-
-      {/* Extra-Curricular Activities */}
-      {data.extraCurricular && data.extraCurricular.length > 0 && (
-        <>
-          <h2>Extra-Curricular Activities</h2>
-          <ul>
-            {data.extraCurricular.map((item, i) => <li key={i}>{item}</li>)}
-          </ul>
-        </>
-      )}
-
-      {/* Languages */}
-      {data.languages && data.languages.length > 0 && (
-        <>
-          <h2>Languages</h2>
-          <ul>
-            {data.languages.map((lang, i) => <li key={i}>{lang}</li>)}
-          </ul>
-        </>
-      )}
-
-      {/* Strengths */}
-      {data.strengths && data.strengths.length > 0 && (
-        <>
-          <h2>Strengths</h2>
-          <ul>
-            {data.strengths.map((s, i) => <li key={i}>{s}</li>)}
-          </ul>
-        </>
-      )}
-
-      {/* Hobbies */}
-      {data.hobbies && data.hobbies.length > 0 && (
-        <>
-          <h2>Hobbies</h2>
-          <ul>
-            {data.hobbies.map((h, i) => <li key={i}>{h}</li>)}
-          </ul>
-        </>
-      )}
-
-      {/* Declaration */}
-      {data.declaration && (
-        <>
-          <h2>Declaration</h2>
-          <p>{data.declaration}</p>
-        </>
-      )}
+      {/* Resume Preview */}
+      {renderTemplate()}
     </div>
   );
 };

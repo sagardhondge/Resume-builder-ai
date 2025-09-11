@@ -1,84 +1,85 @@
 import React from "react";
 
 const MinimalTemplate = ({ data }) => {
-  if (!data) return null;
-
-  const {
-    basicInfo,
-    careerObjective,
-    education,
-    projects,
-    technicalSkills,
-    achievements,
-  } = data;
-
   return (
-    <div
-      style={{
-        fontFamily: "Georgia, serif",
-        padding: "20px",
-        maxWidth: "800px",
-        margin: "auto",
-        borderLeft: "5px solid #333",
-        backgroundColor: "#fafafa",
-      }}
-    >
-      {/* Basic Info */}
-      <h1 style={{ marginBottom: "5px" }}>{basicInfo?.fullName}</h1>
-      <small style={{ color: "#555" }}>
-        {basicInfo?.email} | {basicInfo?.phone} | {basicInfo?.location}
-      </small>
-
-      {/* Career Objective */}
-      {careerObjective && (
-        <section style={{ marginTop: "20px" }}>
-          <h3>Objective</h3>
-          <p>{careerObjective}</p>
-        </section>
+    <div style={{ fontFamily: "Arial", padding: "20px", color: "#222" }}>
+      {/* Header */}
+      {(data.basicInfo?.firstName || data.basicInfo?.lastName) && (
+        <h2 style={{ marginBottom: "5px" }}>
+          {data.basicInfo?.firstName}{" "}
+          {data.basicInfo?.middleName && data.basicInfo.middleName + " "}
+          {data.basicInfo?.lastName}
+        </h2>
       )}
+      <p style={{ fontSize: "14px", color: "#555" }}>
+        {data.basicInfo?.email && <>📧 {data.basicInfo.email} | </>}
+        {data.basicInfo?.phone && <>📞 {data.basicInfo.phone} | </>}
+        {data.basicInfo?.currentAddress && <>📍 {data.basicInfo.currentAddress}</>}
+      </p>
+      <hr />
 
-      {/* Education */}
-      {education?.length > 0 && (
-        <section style={{ marginTop: "20px" }}>
-          <h3>Education</h3>
-          {education.map((edu, idx) => (
-            <p key={idx}>
-              <strong>{edu.degree}</strong> - {edu.institution} ({edu.year})
+      {data.careerObjective && <p><strong>Objective:</strong> {data.careerObjective}</p>}
+
+      {data.education?.length > 0 && (
+        <>
+          <h4>Education</h4>
+          {data.education.map((edu, i) => (
+            <p key={i}>
+              {edu.degree}, {edu.institution} ({edu.year}) {edu.grade && `- ${edu.grade}`}
             </p>
           ))}
-        </section>
+        </>
       )}
 
-      {/* Projects */}
-      {projects?.length > 0 && (
-        <section style={{ marginTop: "20px" }}>
-          <h3>Projects</h3>
-          {projects.map((proj, idx) => (
-            <p key={idx}>
-              <strong>{proj.title}</strong>: {proj.description}
+      {data.projects?.length > 0 && (
+        <>
+          <h4>Projects</h4>
+          {data.projects.map((proj, i) => (
+            <p key={i}>
+              <strong>{proj.title}</strong> {proj.description && `- ${proj.description}`}
+              {proj.link && <span> 🔗 {proj.link}</span>}
             </p>
           ))}
-        </section>
+        </>
       )}
 
-      {/* Skills */}
-      {technicalSkills?.length > 0 && (
-        <section style={{ marginTop: "20px" }}>
-          <h3>Skills</h3>
-          <p>{technicalSkills.join(", ")}</p>
-        </section>
+      {data.skills?.length > 0 && (
+        <>
+          <h4>Skills</h4>
+          <p>{data.skills.join(", ")}</p>
+        </>
       )}
 
-      {/* Achievements */}
-      {achievements?.length > 0 && (
-        <section style={{ marginTop: "20px" }}>
-          <h3>Achievements</h3>
-          <ul>
-            {achievements.map((ach, idx) => (
-              <li key={idx}>{ach}</li>
-            ))}
-          </ul>
-        </section>
+      {data.internships?.length > 0 && (
+        <>
+          <h4>Internships</h4>
+          {data.internships.map((intern, i) => (
+            <p key={i}>
+              {intern.company} - {intern.role} ({intern.duration})
+            </p>
+          ))}
+        </>
+      )}
+
+      {data.certifications?.length > 0 && (
+        <>
+          <h4>Certifications</h4>
+          <p>{data.certifications.join(", ")}</p>
+        </>
+      )}
+
+      {data.achievements?.length > 0 && (
+        <>
+          <h4>Achievements</h4>
+          <p>{data.achievements.join(", ")}</p>
+        </>
+      )}
+
+      {data.declaration && (
+        <>
+          <h4>Declaration</h4>
+          <p>{data.declaration}</p>
+        </>
       )}
     </div>
   );
