@@ -7,10 +7,13 @@ import ProfessionalTemplate from "./templates/ProfessionalTemplate";
 import CreativeTemplate from "./templates/CreativeTemplate";
 import ExecutiveTemplate from "./templates/ExecutiveTemplate";
 import ModernMinimalTemplate from "./templates/ModernMinimalTemplate";
+import BlueHeaderTemplate from "./templates/BlueHeaderTemplate";
+import BlackHeaderTemplate from "./templates/BlackHeaderTemplate";
+import GreenSidebarTemplate from "./templates/GreenSidebarTemplate";
 
 const Templates = ({ data }) => {
   const [selectedTemplate, setSelectedTemplate] = useState("classic");
-  const printRef = useRef(); // useful if you plan to use react-to-print
+  const printRef = useRef();
 
   // fallback demo data for preview if no real data is passed
   const demoData = {
@@ -64,6 +67,9 @@ const Templates = ({ data }) => {
     creative: CreativeTemplate,
     executive: ExecutiveTemplate,
     modernminimal: ModernMinimalTemplate,
+    blueheader: BlueHeaderTemplate,
+    blackheader: BlackHeaderTemplate,
+    greensidebar: GreenSidebarTemplate,
   };
 
   const renderTemplate = () => {
@@ -92,6 +98,12 @@ const Templates = ({ data }) => {
                     ? "#28a745"
                     : tpl === "minimal"
                     ? "#6c757d"
+                    : tpl === "blueheader"
+                    ? "#007BFF"
+                    : tpl === "blackheader"
+                    ? "#000000"
+                    : tpl === "greensidebar"
+                    ? "#28a745"
                     : "#17a2b8"
                   : "#f9f9f9",
               color: selectedTemplate === tpl ? "#fff" : "#333",
