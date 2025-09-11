@@ -13,7 +13,6 @@ const ClassicTemplate = ({ data = {} }) => {
     coCurricular = [],
     extraCurricular = [],
     declaration,
-    // ✅ newly added fields
     languages = [],
     strengths = [],
     hobbies = [],
@@ -34,11 +33,7 @@ const ClassicTemplate = ({ data = {} }) => {
     basicInfo.linkedin ||
     basicInfo.portfolio;
 
-  const hasValidEntries = (arr, keys) =>
-    Array.isArray(arr) &&
-    arr.some((item) =>
-      keys.some((key) => item[key] && item[key].toString().trim() !== "")
-    );
+  const isNumber = (value) => /^\d+$/.test(value);
 
   return (
     <div style={{ fontFamily: "Times New Roman", padding: "20px", lineHeight: "1.6" }}>
@@ -91,68 +86,76 @@ const ClassicTemplate = ({ data = {} }) => {
         <>
           <h2>Career Objective</h2>
           <p>{careerObjective}</p>
+          <hr />
         </>
       )}
 
       {/* ===== Education ===== */}
-      {hasValidEntries(education, ["degree", "institution", "year", "grade"]) && (
-        <>
-          <h2>Education</h2>
-          {education.map(
-            (edu, i) =>
-              (edu.degree || edu.institution || edu.year || edu.grade) && (
-                <div key={i}>
-                  <p>
-                    <strong>{edu.degree}</strong> - {edu.institution} ({edu.year})
-                  </p>
-                  {edu.grade && <p>Grade: {edu.grade}</p>}
-                </div>
-              )
-          )}
-        </>
-      )}
+      {education.length > 0 &&
+        education.some((edu) => edu.degree || edu.institution || isNumber(edu.year) || edu.grade) && (
+          <>
+            <h2>Education</h2>
+            {education.map(
+              (edu, i) =>
+                (edu.degree || edu.institution || isNumber(edu.year) || edu.grade) && (
+                  <div key={i}>
+                    <p>
+                      <strong>{edu.degree}</strong> - {edu.institution}{" "}
+                      {isNumber(edu.year) && `(${edu.year})`}
+                    </p>
+                    {edu.grade && <p>Grade: {edu.grade}</p>}
+                  </div>
+                )
+            )}
+            <hr />
+          </>
+        )}
 
       {/* ===== Internships ===== */}
-      {hasValidEntries(internships, ["company", "role", "duration", "description"]) && (
-        <>
-          <h2>Internships</h2>
-          {internships.map(
-            (intern, i) =>
-              (intern.company || intern.role || intern.duration || intern.description) && (
-                <div key={i}>
-                  <p>
-                    <strong>{intern.company}</strong> - {intern.role}
-                  </p>
-                  {intern.duration && <p>{intern.duration}</p>}
-                  {intern.description && <p>{intern.description}</p>}
-                </div>
-              )
-          )}
-        </>
-      )}
+      {internships.length > 0 &&
+        internships.some((intern) => intern.company || intern.role || intern.duration || intern.description) && (
+          <>
+            <h2>Internships</h2>
+            {internships.map(
+              (intern, i) =>
+                (intern.company || intern.role || intern.duration || intern.description) && (
+                  <div key={i}>
+                    <p>
+                      <strong>{intern.company}</strong> - {intern.role}
+                    </p>
+                    {intern.duration && <p>{intern.duration}</p>}
+                    {intern.description && <p>{intern.description}</p>}
+                  </div>
+                )
+            )}
+            <hr />
+          </>
+        )}
 
       {/* ===== Projects ===== */}
-      {hasValidEntries(projects, ["title", "description", "link"]) && (
-        <>
-          <h2>Projects</h2>
-          {projects.map(
-            (proj, i) =>
-              (proj.title || proj.description || proj.link) && (
-                <div key={i}>
-                  <p>
-                    <strong>{proj.title}</strong>
-                  </p>
-                  {proj.description && <p>{proj.description}</p>}
-                  {proj.link && (
-                    <a href={proj.link} target="_blank" rel="noopener noreferrer">
-                      View Project
-                    </a>
-                  )}
-                </div>
-              )
-          )}
-        </>
-      )}
+      {projects.length > 0 &&
+        projects.some((proj) => proj.title || proj.description || proj.link) && (
+          <>
+            <h2>Projects</h2>
+            {projects.map(
+              (proj, i) =>
+                (proj.title || proj.description || proj.link) && (
+                  <div key={i}>
+                    <p>
+                      <strong>{proj.title}</strong>
+                    </p>
+                    {proj.description && <p>{proj.description}</p>}
+                    {proj.link && (
+                      <a href={proj.link} target="_blank" rel="noopener noreferrer">
+                        View Project
+                      </a>
+                    )}
+                  </div>
+                )
+            )}
+            <hr />
+          </>
+        )}
 
       {/* ===== Technical Skills ===== */}
       {technicalSkills.length > 0 && technicalSkills.some((s) => s && s.trim() !== "") && (
@@ -161,6 +164,7 @@ const ClassicTemplate = ({ data = {} }) => {
           <ul>
             {technicalSkills.map((skill, i) => skill && <li key={i}>{skill}</li>)}
           </ul>
+          <hr />
         </>
       )}
 
@@ -171,6 +175,7 @@ const ClassicTemplate = ({ data = {} }) => {
           <ul>
             {languages.map((lang, i) => lang && <li key={i}>{lang}</li>)}
           </ul>
+          <hr />
         </>
       )}
 
@@ -181,6 +186,7 @@ const ClassicTemplate = ({ data = {} }) => {
           <ul>
             {strengths.map((st, i) => st && <li key={i}>{st}</li>)}
           </ul>
+          <hr />
         </>
       )}
 
@@ -191,6 +197,7 @@ const ClassicTemplate = ({ data = {} }) => {
           <ul>
             {hobbies.map((hb, i) => hb && <li key={i}>{hb}</li>)}
           </ul>
+          <hr />
         </>
       )}
 
@@ -201,6 +208,7 @@ const ClassicTemplate = ({ data = {} }) => {
           <ul>
             {areaOfInterest.map((area, i) => area && <li key={i}>{area}</li>)}
           </ul>
+          <hr />
         </>
       )}
 
@@ -209,6 +217,7 @@ const ClassicTemplate = ({ data = {} }) => {
         <>
           <h2>Job Preferences</h2>
           <p>{jobPreferences}</p>
+          <hr />
         </>
       )}
 
@@ -217,6 +226,7 @@ const ClassicTemplate = ({ data = {} }) => {
         <>
           <h2>Family Background</h2>
           <p>{familyBackground}</p>
+          <hr />
         </>
       )}
 
@@ -227,6 +237,7 @@ const ClassicTemplate = ({ data = {} }) => {
           <ul>
             {certifications.map((cert, i) => cert && <li key={i}>{cert}</li>)}
           </ul>
+          <hr />
         </>
       )}
 
@@ -237,6 +248,7 @@ const ClassicTemplate = ({ data = {} }) => {
           <ul>
             {achievements.map((ach, i) => ach && <li key={i}>{ach}</li>)}
           </ul>
+          <hr />
         </>
       )}
 
@@ -247,6 +259,7 @@ const ClassicTemplate = ({ data = {} }) => {
           <ul>
             {coCurricular.map((act, i) => act && <li key={i}>{act}</li>)}
           </ul>
+          <hr />
         </>
       )}
 
@@ -257,6 +270,7 @@ const ClassicTemplate = ({ data = {} }) => {
           <ul>
             {extraCurricular.map((act, i) => act && <li key={i}>{act}</li>)}
           </ul>
+          <hr />
         </>
       )}
 
@@ -265,6 +279,7 @@ const ClassicTemplate = ({ data = {} }) => {
         <>
           <h2>Declaration</h2>
           <p>{declaration}</p>
+          <hr />
         </>
       )}
     </div>

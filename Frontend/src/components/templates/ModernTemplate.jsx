@@ -1,106 +1,204 @@
+// src/components/templates/ModernTemplate.jsx
 import React from "react";
 
-const ModernTemplate = ({ data }) => {
+const ModernTemplate = ({ data = {} }) => {
+  const {
+    basicInfo = {},
+    careerObjective = "",
+    education = [],
+    internships = [],
+    projects = [],
+    technicalSkills = [],
+    certifications = [],
+    achievements = [],
+    coCurricular = [],
+    extraCurricular = [],
+    declaration = "",
+    languages = [],
+    strengths = [],
+    hobbies = [],
+    areaOfInterest = [],
+    jobPreferences = "",
+    familyBackground = "",
+  } = data;
+
+  const hasBasicInfo =
+    basicInfo.firstName ||
+    basicInfo.lastName ||
+    basicInfo.middleName ||
+    basicInfo.email ||
+    basicInfo.phone ||
+    basicInfo.currentAddress;
+
+  const isNumber = (value) => /^\d+$/.test(value);
+
   return (
     <div style={{ fontFamily: "Helvetica", padding: "20px", background: "#f9f9f9", color: "#333" }}>
-      {/* Header */}
-      {(data.basicInfo?.firstName || data.basicInfo?.lastName) && (
+      {/* ===== Header / Basic Info ===== */}
+      {hasBasicInfo && (
         <div style={{ textAlign: "center", borderBottom: "3px solid #333", marginBottom: "15px" }}>
-          <h1 style={{ margin: "0", fontSize: "28px", color: "#222" }}>
-            {data.basicInfo?.firstName}{" "}
-            {data.basicInfo?.middleName && data.basicInfo.middleName + " "}
-            {data.basicInfo?.lastName}
-          </h1>
+          {(basicInfo.firstName || basicInfo.lastName) && (
+            <h1 style={{ margin: 0, fontSize: "28px", color: "#222" }}>
+              {basicInfo.firstName}{" "}
+              {basicInfo.middleName && basicInfo.middleName + " "}
+              {basicInfo.lastName}
+            </h1>
+          )}
           <p>
-            {data.basicInfo?.email && <>📧 {data.basicInfo.email} | </>}
-            {data.basicInfo?.phone && <>📞 {data.basicInfo.phone} | </>}
-            {data.basicInfo?.currentAddress && <>📍 {data.basicInfo.currentAddress}</>}
+            {basicInfo.email && <>📧 {basicInfo.email} | </>}
+            {basicInfo.phone && <>📞 {basicInfo.phone} | </>}
+            {basicInfo.currentAddress && <>📍 {basicInfo.currentAddress}</>}
           </p>
         </div>
       )}
 
       <div style={{ display: "flex", gap: "20px" }}>
-        {/* Left Column */}
+        {/* ===== Left Column ===== */}
         <div style={{ flex: 1 }}>
-          {data.skills?.length > 0 && (
+          {technicalSkills.length > 0 && technicalSkills.some((s) => s && s.trim() !== "") && (
             <>
               <h3 style={{ borderBottom: "2px solid #555" }}>Skills</h3>
-              <ul>{data.skills.map((s, i) => <li key={i}>{s}</li>)}</ul>
+              <ul>{technicalSkills.map((s, i) => s && <li key={i}>{s}</li>)}</ul>
             </>
           )}
 
-          {data.languages?.length > 0 && (
+          {languages.length > 0 && languages.some((l) => l && l.trim() !== "") && (
             <>
               <h3 style={{ borderBottom: "2px solid #555" }}>Languages</h3>
-              <ul>{data.languages.map((l, i) => <li key={i}>{l}</li>)}</ul>
+              <ul>{languages.map((l, i) => l && <li key={i}>{l}</li>)}</ul>
             </>
           )}
 
-          {data.strengths?.length > 0 && (
+          {strengths.length > 0 && strengths.some((s) => s && s.trim() !== "") && (
             <>
               <h3 style={{ borderBottom: "2px solid #555" }}>Strengths</h3>
-              <ul>{data.strengths.map((s, i) => <li key={i}>{s}</li>)}</ul>
+              <ul>{strengths.map((s, i) => s && <li key={i}>{s}</li>)}</ul>
+            </>
+          )}
+
+          {hobbies.length > 0 && hobbies.some((h) => h && h.trim() !== "") && (
+            <>
+              <h3 style={{ borderBottom: "2px solid #555" }}>Hobbies</h3>
+              <ul>{hobbies.map((h, i) => h && <li key={i}>{h}</li>)}</ul>
             </>
           )}
         </div>
 
-        {/* Right Column */}
+        {/* ===== Right Column ===== */}
         <div style={{ flex: 2 }}>
-          {data.careerObjective && (
+          {careerObjective && careerObjective.trim() !== "" && (
             <>
               <h3 style={{ borderBottom: "2px solid #555" }}>Career Objective</h3>
-              <p>{data.careerObjective}</p>
+              <p>{careerObjective}</p>
             </>
           )}
 
-          {data.education?.length > 0 && (
-            <>
-              <h3 style={{ borderBottom: "2px solid #555" }}>Education</h3>
-              {data.education.map((edu, i) => (
-                <p key={i}>
-                  <strong>{edu.degree}</strong> - {edu.institution} ({edu.year}) {edu.grade && `| Grade: ${edu.grade}`}
-                </p>
-              ))}
-            </>
-          )}
+          {education.length > 0 &&
+            education.some((edu) => edu.degree || edu.institution || isNumber(edu.year) || edu.grade) && (
+              <>
+                <h3 style={{ borderBottom: "2px solid #555" }}>Education</h3>
+                {education.map(
+                  (edu, i) =>
+                    (edu.degree || edu.institution || isNumber(edu.year) || edu.grade) && (
+                      <p key={i}>
+                        <strong>{edu.degree}</strong> - {edu.institution}{" "}
+                        {isNumber(edu.year) && `(${edu.year})`}
+                        {edu.grade && ` | Grade: ${edu.grade}`}
+                      </p>
+                    )
+                )}
+              </>
+            )}
 
-          {data.projects?.length > 0 && (
-            <>
-              <h3 style={{ borderBottom: "2px solid #555" }}>Projects</h3>
-              {data.projects.map((proj, i) => (
-                <div key={i}>
-                  <p><strong>{proj.title}</strong></p>
-                  {proj.description && <p>{proj.description}</p>}
-                  {proj.link && <a href={proj.link}>{proj.link}</a>}
-                </div>
-              ))}
-            </>
-          )}
+          {projects.length > 0 &&
+            projects.some((p) => p.title || p.description || p.link) && (
+              <>
+                <h3 style={{ borderBottom: "2px solid #555" }}>Projects</h3>
+                {projects.map(
+                  (proj, i) =>
+                    (proj.title || proj.description || proj.link) && (
+                      <div key={i}>
+                        <p><strong>{proj.title}</strong></p>
+                        {proj.description && <p>{proj.description}</p>}
+                        {proj.link && (
+                          <a href={proj.link} target="_blank" rel="noopener noreferrer">{proj.link}</a>
+                        )}
+                      </div>
+                    )
+                )}
+              </>
+            )}
 
-          {data.internships?.length > 0 && (
-            <>
-              <h3 style={{ borderBottom: "2px solid #555" }}>Internships</h3>
-              {data.internships.map((intern, i) => (
-                <div key={i}>
-                  <p><strong>{intern.company}</strong> - {intern.role}</p>
-                  {intern.duration && <p>{intern.duration}</p>}
-                  {intern.description && <p>{intern.description}</p>}
-                </div>
-              ))}
-            </>
-          )}
+          {internships.length > 0 &&
+            internships.some((intern) => intern.company || intern.role || intern.duration || intern.description) && (
+              <>
+                <h3 style={{ borderBottom: "2px solid #555" }}>Internships</h3>
+                {internships.map(
+                  (intern, i) =>
+                    (intern.company || intern.role || intern.duration || intern.description) && (
+                      <div key={i}>
+                        <p><strong>{intern.role}</strong> - {intern.company}</p>
+                        {intern.duration && <p>{intern.duration}</p>}
+                        {intern.description && <p>{intern.description}</p>}
+                      </div>
+                    )
+                )}
+              </>
+            )}
 
-          {data.certifications?.length > 0 && (
+          {certifications.length > 0 && certifications.some((c) => c && c.trim() !== "") && (
             <>
               <h3 style={{ borderBottom: "2px solid #555" }}>Certifications</h3>
-              <ul>{data.certifications.map((c, i) => <li key={i}>{c}</li>)}</ul>
+              <ul>{certifications.map((c, i) => c && <li key={i}>{c}</li>)}</ul>
             </>
           )}
 
-          {data.declaration && (
+          {achievements.length > 0 && achievements.some((a) => a && a.trim() !== "") && (
+            <>
+              <h3 style={{ borderBottom: "2px solid #555" }}>Achievements / Awards</h3>
+              <ul>{achievements.map((a, i) => a && <li key={i}>{a}</li>)}</ul>
+            </>
+          )}
+
+          {coCurricular.length > 0 && coCurricular.some((c) => c && c.trim() !== "") && (
+            <>
+              <h3 style={{ borderBottom: "2px solid #555" }}>Co-Curricular Activities</h3>
+              <ul>{coCurricular.map((c, i) => c && <li key={i}>{c}</li>)}</ul>
+            </>
+          )}
+
+          {extraCurricular.length > 0 && extraCurricular.some((c) => c && c.trim() !== "") && (
+            <>
+              <h3 style={{ borderBottom: "2px solid #555" }}>Extra-Curricular Activities</h3>
+              <ul>{extraCurricular.map((c, i) => c && <li key={i}>{c}</li>)}</ul>
+            </>
+          )}
+
+          {areaOfInterest.length > 0 && areaOfInterest.some((a) => a && a.trim() !== "") && (
+            <>
+              <h3 style={{ borderBottom: "2px solid #555" }}>Area of Interest</h3>
+              <ul>{areaOfInterest.map((a, i) => a && <li key={i}>{a}</li>)}</ul>
+            </>
+          )}
+
+          {jobPreferences && jobPreferences.trim() !== "" && (
+            <>
+              <h3 style={{ borderBottom: "2px solid #555" }}>Job Preferences</h3>
+              <p>{jobPreferences}</p>
+            </>
+          )}
+
+          {familyBackground && familyBackground.trim() !== "" && (
+            <>
+              <h3 style={{ borderBottom: "2px solid #555" }}>Family Background</h3>
+              <p>{familyBackground}</p>
+            </>
+          )}
+
+          {declaration && declaration.trim() !== "" && (
             <>
               <h3 style={{ borderBottom: "2px solid #555" }}>Declaration</h3>
-              <p>{data.declaration}</p>
+              <p>{declaration}</p>
             </>
           )}
         </div>
