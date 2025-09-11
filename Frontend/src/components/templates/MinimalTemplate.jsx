@@ -35,11 +35,15 @@ const MinimalTemplate = React.forwardRef(({ data = {} }, ref) => {
     <div
       ref={ref}
       style={{
-        fontFamily: "'Helvetica Neue', sans-serif",
+        width: "210mm",
+        minHeight: "297mm",
+        margin: "0 auto",
         padding: "30px",
+        fontFamily: "'Helvetica Neue', sans-serif",
         lineHeight: "1.5",
         color: "#333",
         background: "#fdfdfd",
+        boxSizing: "border-box",
       }}
     >
       {/* ===== Header ===== */}
@@ -54,6 +58,10 @@ const MinimalTemplate = React.forwardRef(({ data = {} }, ref) => {
             {basicInfo.email && <>📧 {basicInfo.email} | </>}
             {basicInfo.phone && <>📞 {basicInfo.phone} | </>}
             {basicInfo.currentAddress && <>📍 {basicInfo.currentAddress}</>}
+            {basicInfo.dob && <> | DOB: {basicInfo.dob}</>}
+            {basicInfo.github && <> | GitHub: {basicInfo.github}</>}
+            {basicInfo.linkedin && <> | LinkedIn: {basicInfo.linkedin}</>}
+            {basicInfo.portfolio && <> | Portfolio: {basicInfo.portfolio}</>}
           </p>
           <hr style={{ marginTop: "15px", border: "0.5px solid #ccc" }} />
         </div>
@@ -89,6 +97,26 @@ const MinimalTemplate = React.forwardRef(({ data = {} }, ref) => {
               <h3 style={{ fontSize: "16px", borderBottom: "1px solid #ddd" }}>Strengths</h3>
               <ul style={{ paddingLeft: "15px" }}>
                 {strengths.map((st, i) => st && <li key={i}>{st}</li>)}
+              </ul>
+            </section>
+          )}
+
+          {/* Hobbies */}
+          {hobbies.length > 0 && hobbies.some((h) => h.trim() !== "") && (
+            <section style={{ marginBottom: "20px" }}>
+              <h3 style={{ fontSize: "16px", borderBottom: "1px solid #ddd" }}>Hobbies</h3>
+              <ul style={{ paddingLeft: "15px" }}>
+                {hobbies.map((h, i) => h && <li key={i}>{h}</li>)}
+              </ul>
+            </section>
+          )}
+
+          {/* Area of Interest */}
+          {areaOfInterest.length > 0 && areaOfInterest.some((a) => a.trim() !== "") && (
+            <section style={{ marginBottom: "20px" }}>
+              <h3 style={{ fontSize: "16px", borderBottom: "1px solid #ddd" }}>Area of Interest</h3>
+              <ul style={{ paddingLeft: "15px" }}>
+                {areaOfInterest.map((a, i) => a && <li key={i}>{a}</li>)}
               </ul>
             </section>
           )}
@@ -134,6 +162,7 @@ const MinimalTemplate = React.forwardRef(({ data = {} }, ref) => {
                           <strong>{proj.name}</strong>
                         </p>
                         {proj.description && <p>{proj.description}</p>}
+                        {proj.link && <p>Link: <a href={proj.link} target="_blank" rel="noopener noreferrer">{proj.link}</a></p>}
                       </div>
                     )
                 )}
@@ -180,6 +209,42 @@ const MinimalTemplate = React.forwardRef(({ data = {} }, ref) => {
             </section>
           )}
 
+          {/* Co-Curricular */}
+          {coCurricular.length > 0 && coCurricular.some((c) => c.trim() !== "") && (
+            <section style={{ marginBottom: "20px" }}>
+              <h3 style={{ fontSize: "16px", borderBottom: "1px solid #ddd" }}>Co-Curricular Activities</h3>
+              <ul style={{ paddingLeft: "15px" }}>
+                {coCurricular.map((c, i) => c && <li key={i}>{c}</li>)}
+              </ul>
+            </section>
+          )}
+
+          {/* Extra-Curricular */}
+          {extraCurricular.length > 0 && extraCurricular.some((c) => c.trim() !== "") && (
+            <section style={{ marginBottom: "20px" }}>
+              <h3 style={{ fontSize: "16px", borderBottom: "1px solid #ddd" }}>Extra-Curricular Activities</h3>
+              <ul style={{ paddingLeft: "15px" }}>
+                {extraCurricular.map((c, i) => c && <li key={i}>{c}</li>)}
+              </ul>
+            </section>
+          )}
+
+          {/* Job Preferences */}
+          {jobPreferences && (
+            <section style={{ marginBottom: "20px" }}>
+              <h3 style={{ fontSize: "16px", borderBottom: "1px solid #ddd" }}>Job Preferences</h3>
+              <p>{jobPreferences}</p>
+            </section>
+          )}
+
+          {/* Family Background */}
+          {familyBackground && (
+            <section style={{ marginBottom: "20px" }}>
+              <h3 style={{ fontSize: "16px", borderBottom: "1px solid #ddd" }}>Family Background</h3>
+              <p>{familyBackground}</p>
+            </section>
+          )}
+
           {/* Declaration */}
           {declaration && (
             <section style={{ marginTop: "25px" }}>
@@ -194,4 +259,3 @@ const MinimalTemplate = React.forwardRef(({ data = {} }, ref) => {
 });
 
 export default MinimalTemplate;
-                

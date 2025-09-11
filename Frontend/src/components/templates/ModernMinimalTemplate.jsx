@@ -1,6 +1,6 @@
 import React from "react";
 
-const ModernMinimalTemplate = ({ data = {} }) => {
+const ModernMinimalTemplate = React.forwardRef(({ data = {} }, ref) => {
   const {
     basicInfo = {},
     careerObjective,
@@ -37,265 +37,218 @@ const ModernMinimalTemplate = ({ data = {} }) => {
 
   return (
     <div
-      style={{
-        fontFamily: "'Arial', sans-serif",
-        padding: "20px",
-        lineHeight: "1.5",
-        color: "#222",
-        background: "#ffffff",
-      }}
+      ref={ref}
+      className="bg-gray-50 text-gray-800 leading-relaxed font-sans min-h-screen"
     >
-      {/* Basic Info */}
-      {hasBasicInfo && (
-        <>
-          {(basicInfo.firstName || basicInfo.lastName) && (
-            <h1 style={{ textAlign: "center", fontWeight: "700" }}>
-              {basicInfo.firstName}{" "}
-              {basicInfo.middleName && basicInfo.middleName + " "}
-              {basicInfo.lastName}
-            </h1>
-          )}
-          <p style={{ textAlign: "center", fontSize: "14px", color: "#555" }}>
-            {basicInfo.email && <>{basicInfo.email} | </>}
-            {basicInfo.phone && <>{basicInfo.phone} | </>}
-            {basicInfo.currentAddress && <>{basicInfo.currentAddress} | </>}
-            {basicInfo.dob && <>{basicInfo.dob} | </>}
-            {basicInfo.github && (
-              <a
-                href={basicInfo.github}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                GitHub
-              </a>
+      <style>
+        {`
+          /* Specific styles for A4 page and print */
+          .a4-page {
+            max-width: 210mm;
+            min-height: 297mm;
+            margin: auto;
+            background: white;
+            padding: 2.5rem; /* ~30px */
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+          }
+          @media print {
+            .a4-page {
+              box-shadow: none;
+              border: none;
+              padding: 10mm;
+              margin: 0;
+              width: 210mm;
+              height: 297mm;
+              page-break-after: always;
+            }
+          }
+          .font-sans {
+            font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+          }
+        `}
+      </style>
+      <div className="a4-page">
+        {/* Basic Info */}
+        {hasBasicInfo && (
+          <div className="text-center mb-6">
+            {(basicInfo.firstName || basicInfo.lastName) && (
+              <h1 className="text-4xl font-extrabold mb-1">
+                {basicInfo.firstName}{" "}
+                {basicInfo.middleName && basicInfo.middleName + " "}
+                {basicInfo.lastName}
+              </h1>
             )}
-            {basicInfo.linkedin && (
-              <>
-                {" "}
-                |{" "}
-                <a
-                  href={basicInfo.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+            <div className="flex flex-wrap justify-center items-center text-sm text-gray-600 gap-x-2">
+              {basicInfo.email && <span>📧 {basicInfo.email}</span>}
+              {basicInfo.phone && <span>📞 {basicInfo.phone}</span>}
+              {basicInfo.currentAddress && <span>📍 {basicInfo.currentAddress}</span>}
+              {basicInfo.dob && <span>🎂 {basicInfo.dob}</span>}
+              {basicInfo.github && (
+                <a href={basicInfo.github} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                  GitHub
+                </a>
+              )}
+              {basicInfo.linkedin && (
+                <a href={basicInfo.linkedin} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
                   LinkedIn
                 </a>
-              </>
-            )}
-            {basicInfo.portfolio && (
-              <>
-                {" "}
-                |{" "}
-                <a
-                  href={basicInfo.portfolio}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+              )}
+              {basicInfo.portfolio && (
+                <a href={basicInfo.portfolio} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
                   Portfolio
                 </a>
-              </>
+              )}
+            </div>
+            <hr className="my-4 border-t-2 border-gray-300" />
+          </div>
+        )}
+
+        {/* Main Content Sections */}
+        <div className="flex flex-col md:flex-row gap-8">
+          {/* Left Column for Skills and other lists */}
+          <div className="md:w-1/3 space-y-6">
+            {technicalSkills.some((s) => s) && (
+              <section>
+                <h3 className="text-lg font-semibold border-b border-gray-300 mb-2">Technical Skills</h3>
+                <ul className="list-disc list-inside space-y-1 text-sm">
+                  {technicalSkills.map((s, i) => s && <li key={i}>{s}</li>)}
+                </ul>
+              </section>
             )}
-          </p>
-          <hr />
-        </>
-      )}
 
-      {/* Career Objective */}
-      {careerObjective && (
-        <>
-          <h2>Career Objective</h2>
-          <p>{careerObjective}</p>
-          <hr />
-        </>
-      )}
+            {languages.some((l) => l) && (
+              <section>
+                <h3 className="text-lg font-semibold border-b border-gray-300 mb-2">Languages</h3>
+                <ul className="list-disc list-inside space-y-1 text-sm">
+                  {languages.map((l, i) => l && <li key={i}>{l}</li>)}
+                </ul>
+              </section>
+            )}
 
-      {/* Education */}
-      {education.some(
-        (edu) => edu.degree || edu.institution || isNumber(edu.year) || edu.grade
-      ) && (
-        <>
-          <h2>Education</h2>
-          {education.map(
-            (edu, i) =>
-              (edu.degree ||
-                edu.institution ||
-                isNumber(edu.year) ||
-                edu.grade) && (
-                <div key={i}>
-                  <p>
-                    <strong>{edu.degree}</strong> - {edu.institution}{" "}
-                    {isNumber(edu.year) && `(${edu.year})`}
-                  </p>
-                  {edu.grade && <p>Grade: {edu.grade}</p>}
+            {strengths.some((s) => s) && (
+              <section>
+                <h3 className="text-lg font-semibold border-b border-gray-300 mb-2">Strengths</h3>
+                <ul className="list-disc list-inside space-y-1 text-sm">
+                  {strengths.map((s, i) => s && <li key={i}>{s}</li>)}
+                </ul>
+              </section>
+            )}
+
+            {hobbies.some((h) => h) && (
+              <section>
+                <h3 className="text-lg font-semibold border-b border-gray-300 mb-2">Hobbies</h3>
+                <ul className="list-disc list-inside space-y-1 text-sm">
+                  {hobbies.map((h, i) => h && <li key={i}>{h}</li>)}
+                </ul>
+              </section>
+            )}
+
+            {certifications.some((c) => c) && (
+              <section>
+                <h3 className="text-lg font-semibold border-b border-gray-300 mb-2">Certifications</h3>
+                <ul className="list-disc list-inside space-y-1 text-sm">
+                  {certifications.map((c, i) => c && <li key={i}>{c}</li>)}
+                </ul>
+              </section>
+            )}
+          </div>
+
+          {/* Right Column for Major Sections */}
+          <div className="md:w-2/3 space-y-6">
+            {careerObjective && (
+              <section>
+                <h3 className="text-lg font-semibold border-b border-gray-300 mb-2">Career Objective</h3>
+                <p className="text-sm">{careerObjective}</p>
+              </section>
+            )}
+
+            {education.some((edu) => edu.degree || edu.institution || isNumber(edu.year) || edu.grade) && (
+              <section>
+                <h3 className="text-lg font-semibold border-b border-gray-300 mb-2">Education</h3>
+                <div className="space-y-4">
+                  {education.map((edu, i) => (edu.degree || edu.institution || isNumber(edu.year) || edu.grade) && (
+                    <div key={i}>
+                      <p className="font-bold text-sm">{edu.degree} {isNumber(edu.year) && <span className="font-normal text-gray-500 text-xs">({edu.year})</span>}</p>
+                      <p className="text-sm text-gray-600">{edu.institution}</p>
+                      {edu.grade && <p className="text-sm">Grade: {edu.grade}</p>}
+                    </div>
+                  ))}
                 </div>
-              )
-          )}
-          <hr />
-        </>
-      )}
+              </section>
+            )}
 
-      {/* Internships */}
-      {internships.some(
-        (intern) =>
-          intern.company || intern.role || intern.duration || intern.description
-      ) && (
-        <>
-          <h2>Internships</h2>
-          {internships.map(
-            (intern, i) =>
-              (intern.company ||
-                intern.role ||
-                intern.duration ||
-                intern.description) && (
-                <div key={i}>
-                  <p>
-                    <strong>{intern.role}</strong> - {intern.company}
-                  </p>
-                  {intern.duration && <p>{intern.duration}</p>}
-                  {intern.description && <p>{intern.description}</p>}
+            {internships.some((intern) => intern.company || intern.role || intern.duration || intern.description) && (
+              <section>
+                <h3 className="text-lg font-semibold border-b border-gray-300 mb-2">Internships</h3>
+                <div className="space-y-4">
+                  {internships.map((intern, i) => (intern.company || intern.role || intern.duration || intern.description) && (
+                    <div key={i}>
+                      <p className="font-bold text-sm">{intern.role} <span className="font-normal text-gray-500 text-xs">| {intern.company}</span></p>
+                      {intern.duration && <p className="text-sm text-gray-600">{intern.duration}</p>}
+                      {intern.description && <p className="text-sm mt-1">{intern.description}</p>}
+                    </div>
+                  ))}
                 </div>
-              )
-          )}
-          <hr />
-        </>
-      )}
+              </section>
+            )}
 
-      {/* Projects */}
-      {projects.some((proj) => proj.title || proj.description || proj.link) && (
-        <>
-          <h2>Projects</h2>
-          {projects.map(
-            (proj, i) =>
-              (proj.title || proj.description || proj.link) && (
-                <div key={i}>
-                  <p>
-                    <strong>{proj.title}</strong>
-                  </p>
-                  {proj.description && <p>{proj.description}</p>}
-                  {proj.link && (
-                    <a
-                      href={proj.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      View Project
-                    </a>
-                  )}
+            {projects.some((proj) => proj.title || proj.description || proj.link) && (
+              <section>
+                <h3 className="text-lg font-semibold border-b border-gray-300 mb-2">Projects</h3>
+                <div className="space-y-4">
+                  {projects.map((proj, i) => (proj.title || proj.description || proj.link) && (
+                    <div key={i}>
+                      <p className="font-bold text-sm">{proj.title}</p>
+                      {proj.description && <p className="text-sm mt-1">{proj.description}</p>}
+                      {proj.link && (
+                        <a href={proj.link} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline text-sm">
+                          View Project
+                        </a>
+                      )}
+                    </div>
+                  ))}
                 </div>
-              )
-          )}
-          <hr />
-        </>
-      )}
+              </section>
+            )}
 
-      {/* Technical Skills */}
-      {technicalSkills.some((s) => s) && (
-        <>
-          <h2>Technical Skills</h2>
-          <ul>{technicalSkills.map((s, i) => s && <li key={i}>{s}</li>)}</ul>
-          <hr />
-        </>
-      )}
+            {achievements.some((a) => a) && (
+              <section>
+                <h3 className="text-lg font-semibold border-b border-gray-300 mb-2">Achievements / Awards</h3>
+                <ul className="list-disc list-inside space-y-1 text-sm">
+                  {achievements.map((a, i) => a && <li key={i}>{a}</li>)}
+                </ul>
+              </section>
+            )}
 
-      {/* Languages */}
-      {languages.some((l) => l) && (
-        <>
-          <h2>Languages</h2>
-          <ul>{languages.map((l, i) => l && <li key={i}>{l}</li>)}</ul>
-          <hr />
-        </>
-      )}
+            {coCurricular.some((c) => c) && (
+              <section>
+                <h3 className="text-lg font-semibold border-b border-gray-300 mb-2">Co-Curricular Activities</h3>
+                <ul className="list-disc list-inside space-y-1 text-sm">
+                  {coCurricular.map((c, i) => c && <li key={i}>{c}</li>)}
+                </ul>
+              </section>
+            )}
 
-      {/* Strengths */}
-      {strengths.some((s) => s) && (
-        <>
-          <h2>Strengths</h2>
-          <ul>{strengths.map((s, i) => s && <li key={i}>{s}</li>)}</ul>
-          <hr />
-        </>
-      )}
+            {extraCurricular.some((c) => c) && (
+              <section>
+                <h3 className="text-lg font-semibold border-b border-gray-300 mb-2">Extra-Curricular Activities</h3>
+                <ul className="list-disc list-inside space-y-1 text-sm">
+                  {extraCurricular.map((c, i) => c && <li key={i}>{c}</li>)}
+                </ul>
+              </section>
+            )}
 
-      {/* Hobbies */}
-      {hobbies.some((h) => h) && (
-        <>
-          <h2>Hobbies</h2>
-          <ul>{hobbies.map((h, i) => h && <li key={i}>{h}</li>)}</ul>
-          <hr />
-        </>
-      )}
-
-      {/* Area of Interest */}
-      {areaOfInterest.some((a) => a) && (
-        <>
-          <h2>Area of Interest</h2>
-          <ul>{areaOfInterest.map((a, i) => a && <li key={i}>{a}</li>)}</ul>
-          <hr />
-        </>
-      )}
-
-      {/* Job Preferences */}
-      {jobPreferences && (
-        <>
-          <h2>Job Preferences</h2>
-          <p>{jobPreferences}</p>
-          <hr />
-        </>
-      )}
-
-      {/* Family Background */}
-      {familyBackground && (
-        <>
-          <h2>Family Background</h2>
-          <p>{familyBackground}</p>
-          <hr />
-        </>
-      )}
-
-      {/* Certifications */}
-      {certifications.some((c) => c) && (
-        <>
-          <h2>Certifications</h2>
-          <ul>{certifications.map((c, i) => c && <li key={i}>{c}</li>)}</ul>
-          <hr />
-        </>
-      )}
-
-      {/* Achievements */}
-      {achievements.some((a) => a) && (
-        <>
-          <h2>Achievements / Awards</h2>
-          <ul>{achievements.map((a, i) => a && <li key={i}>{a}</li>)}</ul>
-          <hr />
-        </>
-      )}
-
-      {/* Co-Curricular */}
-      {coCurricular.some((c) => c) && (
-        <>
-          <h2>Co-Curricular Activities</h2>
-          <ul>{coCurricular.map((c, i) => c && <li key={i}>{c}</li>)}</ul>
-          <hr />
-        </>
-      )}
-
-      {/* Extra-Curricular */}
-      {extraCurricular.some((c) => c) && (
-        <>
-          <h2>Extra-Curricular Activities</h2>
-          <ul>{extraCurricular.map((c, i) => c && <li key={i}>{c}</li>)}</ul>
-          <hr />
-        </>
-      )}
-
-      {/* Declaration */}
-      {declaration && (
-        <>
-          <h2>Declaration</h2>
-          <p>{declaration}</p>
-        </>
-      )}
+            {declaration && (
+              <section className="mt-8">
+                <h3 className="text-lg font-semibold border-b border-gray-300 mb-2">Declaration</h3>
+                <p className="text-sm italic">{declaration}</p>
+              </section>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
-};
+});
 
 export default ModernMinimalTemplate;

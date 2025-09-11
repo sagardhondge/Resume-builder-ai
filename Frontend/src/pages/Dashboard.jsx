@@ -1,19 +1,28 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import resumeImg from "../assets/resumehome.avif"; 
+import altImg from "../assets/qwer.png"; // second image
 import trustpilotLogo from "../assets/trustpilot.svg";
-import { FaCommentDots } from "react-icons/fa"; // Message icon
+import { FaCommentDots } from "react-icons/fa";
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const [flipped, setFlipped] = useState(false);
+
+  // Flip image every 1 second
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setFlipped(prev => !prev);
+    }, 1000); 
+    return () => clearInterval(interval);
+  }, []);
 
   const handleChatClick = () => {
-    // Navigate to AI Chat page or open modal
-    navigate("/ai-chat"); // replace with your AI chat route
+    navigate("/ai-chat"); // AI chat route
   };
 
   return (
-    <div className="d-flex justify-content-center mt-4 position-relative">
+    <div className="d-flex flex-column align-items-center mt-4 position-relative">
       {/* Hero Section */}
       <div
         className="container shadow-lg rounded-4 p-5"
@@ -22,12 +31,19 @@ const Dashboard = () => {
         <div className="row align-items-center text-white">
           {/* Left - Resume Preview */}
           <div className="col-lg-6 mb-4 mb-lg-0 text-center">
-            <img
-              src={resumeImg}
-              alt="Resume Preview"
-              className="img-fluid rounded shadow-lg"
-              style={{ maxHeight: "500px", borderRadius: "20px" }}
-            />
+            <div style={{ perspective: "1000px" }}>
+              <img
+                src={flipped ? altImg : resumeImg}
+                alt="Resume Preview"
+                className="img-fluid rounded shadow-lg"
+                style={{
+                  maxHeight: "500px",
+                  borderRadius: "20px",
+                  transition: "transform 1s",
+                  transform: flipped ? "rotateY(360deg)" : "rotateY(0deg)",
+                }}
+              />
+            </div>
           </div>
 
           {/* Right - Call to Action */}
@@ -47,7 +63,7 @@ const Dashboard = () => {
                 className="btn btn-warning btn-lg text-dark fw-bold px-4 py-2 rounded-pill"
                 onClick={() => navigate("/resume-builder")}
               >
-               Build My Resume
+                Build My Resume
               </button>
             </div>
             <div className="mt-4">
@@ -73,6 +89,14 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Promotional Line Below Card */}
+      <div className="text-center mt-4">
+        <h4 style={{ fontFamily: "Consolas, sans-serif", fontWeight: "600", fontSize: "20px", color: "#1d1c1cff" }}>
+          Pick a resume template and build your resume in minutes! <br />
+          Get an ATS-friendly, AI-assisted resume.
+        </h4>
       </div>
 
       {/* Floating Chat Icon with Text */}

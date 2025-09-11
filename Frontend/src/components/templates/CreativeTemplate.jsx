@@ -37,8 +37,18 @@ const CreativeTemplate = ({ data = {} }) => {
   const isNumber = (value) => /^\d+$/.test(value);
 
   return (
-    <div style={{ fontFamily: "'Comic Sans MS', cursive, sans-serif", padding: "25px", lineHeight: 1.5, background: "#f0f8ff" }}>
-
+    <div
+      style={{
+        width: "210mm",
+        minHeight: "297mm",
+        margin: "0 auto",
+        padding: "25px",
+        fontFamily: "'Comic Sans MS', cursive, sans-serif",
+        lineHeight: 1.5,
+        background: "#f0f8ff",
+        boxSizing: "border-box",
+      }}
+    >
       {/* ===== Basic Info ===== */}
       {hasBasicInfo && (
         <>

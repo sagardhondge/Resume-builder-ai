@@ -17,6 +17,12 @@ const Navbar = () => {
           <Link to="/dashboard" className="nav-link text-dark fw-semibold">
             Home
           </Link>
+          <Link
+            to="/resume-builder"
+            className="nav-link text-dark fw-semibold"
+          >
+            Builder
+          </Link>
           <Link to="/ats-checker" className="nav-link text-dark fw-semibold">
             ATS Score
           </Link>
