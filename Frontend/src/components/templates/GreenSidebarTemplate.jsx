@@ -1,8 +1,6 @@
 import React from "react";
 
-const GreenSidebarTemplate = ({ data }) => {
-  if (!data) return null;
-
+const GreenSidebarTemplate = ({ data = {} }) => {
   const {
     basicInfo = {},
     careerObjective,
@@ -23,6 +21,18 @@ const GreenSidebarTemplate = ({ data }) => {
     familyBackground,
   } = data;
 
+  const hasBasicInfo =
+    basicInfo.fullName ||
+    basicInfo.email ||
+    basicInfo.phone ||
+    basicInfo.address ||
+    basicInfo.dob;
+
+  const isNumber = (value) => /^\d+$/.test(value);
+
+  const renderList = (arr) =>
+    arr.filter((item) => item && item.trim() !== "").map((item, i) => <li key={i}>{item}</li>);
+
   return (
     <div
       style={{
@@ -38,208 +48,170 @@ const GreenSidebarTemplate = ({ data }) => {
       }}
     >
       {/* Sidebar */}
-      <div
-        style={{
-          width: "30%",
-          background: "#2e7d32",
-          color: "white",
-          padding: "20px",
-        }}
-      >
-        {basicInfo?.fullName && (
-          <>
-            <h2 style={{ marginBottom: "10px" }}>{basicInfo.fullName}</h2>
-            <hr />
-          </>
-        )}
+      <div style={{ width: "30%", background: "#2e7d32", color: "white", padding: "20px" }}>
+        {basicInfo.fullName && <h2>{basicInfo.fullName}</h2>}
 
-        {(basicInfo?.email || basicInfo?.phone || basicInfo?.address) && (
+        {(basicInfo.email || basicInfo.phone || basicInfo.address || basicInfo.dob) && (
           <>
             <h3>Contact</h3>
-            {basicInfo?.email && <p>{basicInfo.email}</p>}
-            {basicInfo?.phone && <p>{basicInfo.phone}</p>}
-            {basicInfo?.address && <p>{basicInfo.address}</p>}
-            <hr />
+            {basicInfo.email && <p>Email: {basicInfo.email}</p>}
+            {basicInfo.phone && <p>Phone: {basicInfo.phone}</p>}
+            {basicInfo.address && <p>Address: {basicInfo.address}</p>}
+            {basicInfo.dob && <p>DOB: {basicInfo.dob}</p>}
           </>
         )}
 
-        {technicalSkills?.length > 0 && (
+        {technicalSkills.length > 0 && renderList(technicalSkills).length > 0 && (
           <>
             <h3>Technical Skills</h3>
-            <ul>
-              {technicalSkills.map((skill, i) => (
-                <li key={i}>{skill}</li>
-              ))}
-            </ul>
-            <hr />
+            <ul>{renderList(technicalSkills)}</ul>
           </>
         )}
 
-        {languages?.length > 0 && (
+        {languages.length > 0 && renderList(languages).length > 0 && (
           <>
             <h3>Languages</h3>
-            <ul>
-              {languages.map((lang, i) => (
-                <li key={i}>{lang}</li>
-              ))}
-            </ul>
-            <hr />
+            <ul>{renderList(languages)}</ul>
           </>
         )}
 
-        {strengths?.length > 0 && (
+        {strengths.length > 0 && renderList(strengths).length > 0 && (
           <>
             <h3>Strengths</h3>
-            <ul>
-              {strengths.map((s, i) => (
-                <li key={i}>{s}</li>
-              ))}
-            </ul>
-            <hr />
+            <ul>{renderList(strengths)}</ul>
           </>
         )}
 
-        {hobbies?.length > 0 && (
+        {hobbies.length > 0 && renderList(hobbies).length > 0 && (
           <>
             <h3>Hobbies</h3>
-            <ul>
-              {hobbies.map((h, i) => (
-                <li key={i}>{h}</li>
-              ))}
-            </ul>
-            <hr />
+            <ul>{renderList(hobbies)}</ul>
           </>
         )}
       </div>
 
       {/* Main Content */}
       <div style={{ width: "70%", padding: "20px", color: "#333" }}>
-        {careerObjective && (
-          <section>
-            <h3>Career Objective</h3>
+        {careerObjective && careerObjective.trim() !== "" && (
+          <>
+            <h2>Career Objective</h2>
             <p>{careerObjective}</p>
-            <hr />
-          </section>
+          </>
         )}
 
-        {education?.length > 0 && (
-          <section>
-            <h3>Education</h3>
-            {education.map((edu, i) => (
-              <p key={i}>
-                {edu.degree} - {edu.institution} ({edu.startDate} - {edu.endDate})
-              </p>
-            ))}
-            <hr />
-          </section>
+        {education.length > 0 &&
+          education.some((edu) => edu.degree || edu.institution || isNumber(edu.startDate) || edu.endDate) && (
+            <>
+              <h2>Education</h2>
+              {education.map(
+                (edu, i) =>
+                  (edu.degree || edu.institution || isNumber(edu.startDate) || isNumber(edu.endDate)) && (
+                    <div key={i}>
+                      <p>
+                        {edu.degree && <strong>{edu.degree}</strong>} {edu.institution}{" "}
+                        {edu.startDate && edu.endDate && `(${edu.startDate} - ${edu.endDate})`}
+                      </p>
+                    </div>
+                  )
+              )}
+            </>
+          )}
+
+        {internships.length > 0 &&
+          internships.some((intern) => intern.company || intern.role || intern.duration) && (
+            <>
+              <h2>Internships</h2>
+              {internships.map(
+                (intern, i) =>
+                  (intern.company || intern.role || intern.duration) && (
+                    <div key={i}>
+                      <p>
+                        {intern.company && <strong>{intern.company}</strong>} {intern.role}{" "}
+                        {intern.duration && `(${intern.duration})`}
+                      </p>
+                    </div>
+                  )
+              )}
+            </>
+          )}
+
+        {projects.length > 0 &&
+          projects.some((proj) => proj.title || proj.description) && (
+            <>
+              <h2>Projects</h2>
+              {projects.map(
+                (proj, i) =>
+                  (proj.title || proj.description) && (
+                    <div key={i}>
+                      {proj.title && <p><strong>{proj.title}</strong></p>}
+                      {proj.description && <p>{proj.description}</p>}
+                    </div>
+                  )
+              )}
+            </>
+          )}
+
+        {technicalSkills.length > 0 && renderList(technicalSkills).length > 0 && (
+          <>
+            <h2>Technical Skills</h2>
+            <ul>{renderList(technicalSkills)}</ul>
+          </>
         )}
 
-        {internships?.length > 0 && (
-          <section>
-            <h3>Internships</h3>
-            {internships.map((intern, i) => (
-              <p key={i}>
-                {intern.company} - {intern.role} ({intern.duration})
-              </p>
-            ))}
-            <hr />
-          </section>
+        {certifications.length > 0 && renderList(certifications).length > 0 && (
+          <>
+            <h2>Certifications</h2>
+            <ul>{renderList(certifications)}</ul>
+          </>
         )}
 
-        {projects?.length > 0 && (
-          <section>
-            <h3>Projects</h3>
-            {projects.map((proj, i) => (
-              <p key={i}>
-                {proj.title} - {proj.description}
-              </p>
-            ))}
-            <hr />
-          </section>
+        {achievements.length > 0 && renderList(achievements).length > 0 && (
+          <>
+            <h2>Achievements / Awards</h2>
+            <ul>{renderList(achievements)}</ul>
+          </>
         )}
 
-        {certifications?.length > 0 && (
-          <section>
-            <h3>Certifications</h3>
-            <ul>
-              {certifications.map((c, i) => (
-                <li key={i}>{c}</li>
-              ))}
-            </ul>
-            <hr />
-          </section>
+        {coCurricular.length > 0 && renderList(coCurricular).length > 0 && (
+          <>
+            <h2>Co-Curricular Activities</h2>
+            <ul>{renderList(coCurricular)}</ul>
+          </>
         )}
 
-        {achievements?.length > 0 && (
-          <section>
-            <h3>Achievements & Awards</h3>
-            <ul>
-              {achievements.map((a, i) => (
-                <li key={i}>{a}</li>
-              ))}
-            </ul>
-            <hr />
-          </section>
+        {extraCurricular.length > 0 && renderList(extraCurricular).length > 0 && (
+          <>
+            <h2>Extra-Curricular Activities</h2>
+            <ul>{renderList(extraCurricular)}</ul>
+          </>
         )}
 
-        {coCurricular?.length > 0 && (
-          <section>
-            <h3>Co-Curricular Activities</h3>
-            <ul>
-              {coCurricular.map((c, i) => (
-                <li key={i}>{c}</li>
-              ))}
-            </ul>
-            <hr />
-          </section>
+        {areaOfInterest.length > 0 && renderList(areaOfInterest).length > 0 && (
+          <>
+            <h2>Areas of Interest</h2>
+            <ul>{renderList(areaOfInterest)}</ul>
+          </>
         )}
 
-        {extraCurricular?.length > 0 && (
-          <section>
-            <h3>Extra-Curricular Activities</h3>
-            <ul>
-              {extraCurricular.map((e, i) => (
-                <li key={i}>{e}</li>
-              ))}
-            </ul>
-            <hr />
-          </section>
-        )}
-
-        {areaOfInterest?.length > 0 && (
-          <section>
-            <h3>Areas of Interest</h3>
-            <ul>
-              {areaOfInterest.map((a, i) => (
-                <li key={i}>{a}</li>
-              ))}
-            </ul>
-            <hr />
-          </section>
-        )}
-
-        {jobPreferences && (
-          <section>
-            <h3>Job Preferences</h3>
+        {jobPreferences && jobPreferences.trim() !== "" && (
+          <>
+            <h2>Job Preferences</h2>
             <p>{jobPreferences}</p>
-            <hr />
-          </section>
+          </>
         )}
 
-        {familyBackground && (
-          <section>
-            <h3>Family Background</h3>
+        {familyBackground && familyBackground.trim() !== "" && (
+          <>
+            <h2>Family Background</h2>
             <p>{familyBackground}</p>
-            <hr />
-          </section>
+          </>
         )}
 
-        {declaration && (
-          <section>
-            <h3>Declaration</h3>
+        {declaration && declaration.trim() !== "" && (
+          <>
+            <h2>Declaration</h2>
             <p>{declaration}</p>
-            <hr />
-          </section>
+          </>
         )}
       </div>
     </div>
