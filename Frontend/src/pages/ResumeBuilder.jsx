@@ -1,7 +1,8 @@
-// src/pages/ResumeBuilder.jsx
 import React, { useState, useRef, useEffect } from "react";
 import { useReactToPrint } from "react-to-print";
 import Templates from "../components/Templates";
+
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
 
 const sections = [
   "Basic Info",
@@ -62,17 +63,32 @@ const ResumeBuilder = () => {
   const [selectedTemplate, setSelectedTemplate] = useState("classic");
   const [showPreview, setShowPreview] = useState(false);
   const [form, setForm] = useState(initialFormState);
+  const [resumeId, setResumeId] = useState(null); // 🔹 Track resume for update
   const [showRestorePrompt, setShowRestorePrompt] = useState(false);
 
-  // 🔹 Load saved data if exists
+  // 🔹 Load resume from backend (if logged in)
   useEffect(() => {
-    const savedData = localStorage.getItem("resumeData");
-    if (savedData) {
-      setShowRestorePrompt(true);
-    }
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    fetch(`${API_URL}/api/resumes`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then((resumes) => {
+        if (resumes && resumes.length > 0) {
+          setForm(resumes[0]); // take first resume
+          setResumeId(resumes[0]._id);
+        } else {
+          // check local storage if no backend resume
+          const savedData = localStorage.getItem("resumeData");
+          if (savedData) setShowRestorePrompt(true);
+        }
+      })
+      .catch((err) => console.error("Error fetching resume:", err));
   }, []);
 
-  // 🔹 Auto-save form whenever it changes
+  // 🔹 Auto-save form locally
   useEffect(() => {
     if (form) {
       localStorage.setItem("resumeData", JSON.stringify(form));
@@ -126,6 +142,39 @@ const ResumeBuilder = () => {
       return;
     }
     handlePrint();
+  };
+
+  const saveResume = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("⚠️ Please login to save your resume.");
+      return;
+    }
+
+    try {
+      const method = resumeId ? "PUT" : "POST";
+      const url = resumeId
+        ? `${API_URL}/api/resumes/${resumeId}`
+        : `${API_URL}/api/resumes`;
+
+      const res = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(form),
+      });
+
+      if (!res.ok) throw new Error("Failed to save resume");
+
+      const data = await res.json();
+      setResumeId(data._id);
+      alert("✅ Resume saved successfully!");
+    } catch (err) {
+      console.error(err);
+      alert("❌ Error saving resume");
+    }
   };
 
   const nextStep = () =>
