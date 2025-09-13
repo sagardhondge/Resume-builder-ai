@@ -39,15 +39,14 @@ const GreenSidebarTemplate = ({ data = {} }) => {
         minHeight: "297mm",
         margin: "0 auto",
         background: "white",
-        boxShadow: "0 0 10px rgba(0,0,0,0.15)",
+        boxShadow: "0 0 10px rgba(130, 73, 73, 0.15)",
         fontFamily: "Arial, sans-serif",
         fontSize: "14px",
         lineHeight: "1.6",
       }}
     >
       {/* Sidebar */}
-      <div style={{ width: "30%", background: "#2e7d32", color: "white", padding: "20px" }}>
-        {/* ✅ Show full name */}
+      <div style={{ width: "30%", background: "#506751ff", color: "white", padding: "20px" }}>
         {fullName && <h2>{fullName}</h2>}
 
         {(basicInfo.email || basicInfo.phone || basicInfo.currentAddress || basicInfo.dob) && (
@@ -57,6 +56,27 @@ const GreenSidebarTemplate = ({ data = {} }) => {
             {basicInfo.phone && <p>Phone: {basicInfo.phone}</p>}
             {basicInfo.currentAddress && <p>Address: {basicInfo.currentAddress}</p>}
             {basicInfo.dob && <p>DOB: {basicInfo.dob}</p>}
+                          {basicInfo.github && (
+                <>
+                  <a href={basicInfo.github} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:text-blue-900 mr-1">
+                    GitHub
+                  </a>
+                  |{" "}
+                </>
+              )}
+              {basicInfo.linkedin && (
+                <>
+                  <a href={basicInfo.linkedin} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:text-blue-900 mr-1">
+                    LinkedIn
+                  </a>
+                  |{" "}
+                </>
+              )}
+              {basicInfo.portfolio && (
+                <a href={basicInfo.portfolio} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:text-blue-900 mr-1">
+                  Portfolio
+                </a>
+              )}
           </>
         )}
 
