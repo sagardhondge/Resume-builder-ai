@@ -152,6 +152,43 @@ const CreativeTemplate = ({ data = {} }) => {
         </>
       )}
 
+      {/* ===== Certifications ===== */}
+      {certifications.length > 0 && certifications.some((c) => c && c.trim() !== "") && (
+        <>
+          <h2>Certifications</h2>
+          <ul>{certifications.map((c, i) => c && <li key={i}>{c}</li>)}</ul>
+          <hr style={{ border: "1px dashed #2a52be" }} />
+        </>
+      )}
+
+      {/* ===== Achievements / Awards ===== */}
+      {achievements.length > 0 && achievements.some((a) => a && a.trim() !== "") && (
+        <>
+          <h2>Achievements / Awards</h2>
+          <ul>{achievements.map((a, i) => a && <li key={i}>{a}</li>)}</ul>
+          <hr style={{ border: "1px dashed #2a52be" }} />
+        </>
+      )}
+
+      {/* ===== Co-Curricular Activities ===== */}
+      {coCurricular.length > 0 && coCurricular.some((c) => c && c.trim() !== "") && (
+        <>
+          <h2>Co-Curricular Activities</h2>
+          <ul>{coCurricular.map((c, i) => c && <li key={i}>{c}</li>)}</ul>
+          <hr style={{ border: "1px dashed #2a52be" }} />
+        </>
+      )}
+
+      {/* ===== Extra-Curricular Activities ===== */}
+      {extraCurricular.length > 0 && extraCurricular.some((c) => c && c.trim() !== "") && (
+        <>
+          <h2>Extra-Curricular Activities</h2>
+          <ul>{extraCurricular.map((c, i) => c && <li key={i}>{c}</li>)}</ul>
+          <hr style={{ border: "1px dashed #2a52be" }} />
+        </>
+      )}
+      
+
       {/* ===== Languages ===== */}
       {languages.length > 0 && languages.some((l) => l && l.trim() !== "") && (
         <>
@@ -202,42 +239,6 @@ const CreativeTemplate = ({ data = {} }) => {
         <>
           <h2>Family Background</h2>
           <p>{familyBackground}</p>
-          <hr style={{ border: "1px dashed #2a52be" }} />
-        </>
-      )}
-
-      {/* ===== Certifications ===== */}
-      {certifications.length > 0 && certifications.some((c) => c && c.trim() !== "") && (
-        <>
-          <h2>Certifications</h2>
-          <ul>{certifications.map((c, i) => c && <li key={i}>{c}</li>)}</ul>
-          <hr style={{ border: "1px dashed #2a52be" }} />
-        </>
-      )}
-
-      {/* ===== Achievements / Awards ===== */}
-      {achievements.length > 0 && achievements.some((a) => a && a.trim() !== "") && (
-        <>
-          <h2>Achievements / Awards</h2>
-          <ul>{achievements.map((a, i) => a && <li key={i}>{a}</li>)}</ul>
-          <hr style={{ border: "1px dashed #2a52be" }} />
-        </>
-      )}
-
-      {/* ===== Co-Curricular Activities ===== */}
-      {coCurricular.length > 0 && coCurricular.some((c) => c && c.trim() !== "") && (
-        <>
-          <h2>Co-Curricular Activities</h2>
-          <ul>{coCurricular.map((c, i) => c && <li key={i}>{c}</li>)}</ul>
-          <hr style={{ border: "1px dashed #2a52be" }} />
-        </>
-      )}
-
-      {/* ===== Extra-Curricular Activities ===== */}
-      {extraCurricular.length > 0 && extraCurricular.some((c) => c && c.trim() !== "") && (
-        <>
-          <h2>Extra-Curricular Activities</h2>
-          <ul>{extraCurricular.map((c, i) => c && <li key={i}>{c}</li>)}</ul>
           <hr style={{ border: "1px dashed #2a52be" }} />
         </>
       )}
