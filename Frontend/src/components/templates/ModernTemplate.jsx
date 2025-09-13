@@ -59,9 +59,27 @@ const ModernTemplate = ({ data = {} }) => {
             {basicInfo.email && <>📧 {basicInfo.email} | </>}
             {basicInfo.phone && <>📞 {basicInfo.phone} | </>}
             {basicInfo.currentAddress && <>📍 {basicInfo.currentAddress}</>}
-            {basicInfo.github && <> | GitHub: {basicInfo.github}</>}
-            {basicInfo.linkedin && <> | LinkedIn: {basicInfo.linkedin}</>}
-            {basicInfo.portfolio && <> | Portfolio: {basicInfo.portfolio}</>}
+              {basicInfo.github && (
+                <>
+                  <a href={basicInfo.github} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:text-blue-900 mr-1">
+                    GitHub
+                  </a>
+                  |{" "}
+                </>
+              )}
+              {basicInfo.linkedin && (
+                <>
+                  <a href={basicInfo.linkedin} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:text-blue-900 mr-1">
+                    LinkedIn
+                  </a>
+                  |{" "}
+                </>
+              )}
+              {basicInfo.portfolio && (
+                <a href={basicInfo.portfolio} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:text-blue-900 mr-1">
+                  Portfolio
+                </a>
+              )}
             {basicInfo.dob && <> | DOB: {basicInfo.dob}</>}
           </p>
         </div>

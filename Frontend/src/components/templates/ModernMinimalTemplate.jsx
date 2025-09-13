@@ -16,9 +16,6 @@ const ModernMinimalTemplate = React.forwardRef(({ data = {} }, ref) => {
     languages = [],
     strengths = [],
     hobbies = [],
-    areaOfInterest = [],
-    jobPreferences,
-    familyBackground,
   } = data;
 
   const hasBasicInfo =
@@ -42,13 +39,12 @@ const ModernMinimalTemplate = React.forwardRef(({ data = {} }, ref) => {
     >
       <style>
         {`
-          /* Specific styles for A4 page and print */
           .a4-page {
             max-width: 210mm;
             min-height: 297mm;
             margin: auto;
             background: white;
-            padding: 2.5rem; /* ~30px */
+            padding: 2.5rem;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
           }
           @media print {
@@ -65,8 +61,36 @@ const ModernMinimalTemplate = React.forwardRef(({ data = {} }, ref) => {
           .font-sans {
             font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
           }
+
+          /* Tooltip hover for hidden links */
+          .tooltip-link {
+            position: relative;
+            cursor: pointer;
+            color: #2563eb; /* blue-600 */
+            font-weight: 500;
+          }
+          .tooltip-link::after {
+            content: attr(data-url);
+            position: absolute;
+            bottom: -1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: #fff;
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            white-space: nowrap;
+          }
+          .tooltip-link:hover::after {
+            opacity: 1;
+          }
         `}
       </style>
+
       <div className="a4-page">
         {/* Basic Info */}
         {hasBasicInfo && (
@@ -78,23 +102,42 @@ const ModernMinimalTemplate = React.forwardRef(({ data = {} }, ref) => {
                 {basicInfo.lastName}
               </h1>
             )}
-            <div className="flex flex-wrap justify-center items-center text-sm text-gray-600 gap-x-2">
+            <div className="flex flex-wrap justify-center items-center text-sm text-gray-600 gap-x-3 gap-y-1">
               {basicInfo.email && <span>📧 {basicInfo.email}</span>}
               {basicInfo.phone && <span>📞 {basicInfo.phone}</span>}
               {basicInfo.currentAddress && <span>📍 {basicInfo.currentAddress}</span>}
               {basicInfo.dob && <span>🎂 {basicInfo.dob}</span>}
+
               {basicInfo.github && (
-                <a href={basicInfo.github} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                <a
+                  href={basicInfo.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="tooltip-link"
+                  data-url={basicInfo.github}
+                >
                   GitHub
                 </a>
               )}
               {basicInfo.linkedin && (
-                <a href={basicInfo.linkedin} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                <a
+                  href={basicInfo.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="tooltip-link"
+                  data-url={basicInfo.linkedin}
+                >
                   LinkedIn
                 </a>
               )}
               {basicInfo.portfolio && (
-                <a href={basicInfo.portfolio} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                <a
+                  href={basicInfo.portfolio}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="tooltip-link"
+                  data-url={basicInfo.portfolio}
+                >
                   Portfolio
                 </a>
               )}
@@ -103,13 +146,13 @@ const ModernMinimalTemplate = React.forwardRef(({ data = {} }, ref) => {
           </div>
         )}
 
-        {/* Main Content Sections */}
+        {/* Content Sections */}
         <div className="flex flex-col md:flex-row gap-8">
-          {/* Left Column for Skills and other lists */}
+          {/* Left column */}
           <div className="md:w-1/3 space-y-6">
             {technicalSkills.some((s) => s) && (
               <section>
-                <h3 className="text-lg font-semibold border-b border-gray-300 mb-2">Technical Skills</h3>
+                <h3 className="text-lg font-semibold border-b mb-2">Technical Skills</h3>
                 <ul className="list-disc list-inside space-y-1 text-sm">
                   {technicalSkills.map((s, i) => s && <li key={i}>{s}</li>)}
                 </ul>
@@ -118,7 +161,7 @@ const ModernMinimalTemplate = React.forwardRef(({ data = {} }, ref) => {
 
             {languages.some((l) => l) && (
               <section>
-                <h3 className="text-lg font-semibold border-b border-gray-300 mb-2">Languages</h3>
+                <h3 className="text-lg font-semibold border-b mb-2">Languages</h3>
                 <ul className="list-disc list-inside space-y-1 text-sm">
                   {languages.map((l, i) => l && <li key={i}>{l}</li>)}
                 </ul>
@@ -127,7 +170,7 @@ const ModernMinimalTemplate = React.forwardRef(({ data = {} }, ref) => {
 
             {strengths.some((s) => s) && (
               <section>
-                <h3 className="text-lg font-semibold border-b border-gray-300 mb-2">Strengths</h3>
+                <h3 className="text-lg font-semibold border-b mb-2">Strengths</h3>
                 <ul className="list-disc list-inside space-y-1 text-sm">
                   {strengths.map((s, i) => s && <li key={i}>{s}</li>)}
                 </ul>
@@ -136,7 +179,7 @@ const ModernMinimalTemplate = React.forwardRef(({ data = {} }, ref) => {
 
             {hobbies.some((h) => h) && (
               <section>
-                <h3 className="text-lg font-semibold border-b border-gray-300 mb-2">Hobbies</h3>
+                <h3 className="text-lg font-semibold border-b mb-2">Hobbies</h3>
                 <ul className="list-disc list-inside space-y-1 text-sm">
                   {hobbies.map((h, i) => h && <li key={i}>{h}</li>)}
                 </ul>
@@ -145,7 +188,7 @@ const ModernMinimalTemplate = React.forwardRef(({ data = {} }, ref) => {
 
             {certifications.some((c) => c) && (
               <section>
-                <h3 className="text-lg font-semibold border-b border-gray-300 mb-2">Certifications</h3>
+                <h3 className="text-lg font-semibold border-b mb-2">Certifications</h3>
                 <ul className="list-disc list-inside space-y-1 text-sm">
                   {certifications.map((c, i) => c && <li key={i}>{c}</li>)}
                 </ul>
@@ -153,64 +196,42 @@ const ModernMinimalTemplate = React.forwardRef(({ data = {} }, ref) => {
             )}
           </div>
 
-          {/* Right Column for Major Sections */}
+          {/* Right column */}
           <div className="md:w-2/3 space-y-6">
             {careerObjective && (
               <section>
-                <h3 className="text-lg font-semibold border-b border-gray-300 mb-2">Career Objective</h3>
+                <h3 className="text-lg font-semibold border-b mb-2">Career Objective</h3>
                 <p className="text-sm">{careerObjective}</p>
-              </section>
-            )}
-
-            {education.some((edu) => edu.degree || edu.institution || isNumber(edu.year) || edu.grade) && (
-              <section>
-                <h3 className="text-lg font-semibold border-b border-gray-300 mb-2">Education</h3>
-                <div className="space-y-4">
-                  {education.map((edu, i) => (edu.degree || edu.institution || isNumber(edu.year) || edu.grade) && (
-                    <div key={i}>
-                      <p className="font-bold text-sm">{edu.degree} {isNumber(edu.year) && <span className="font-normal text-gray-500 text-xs">({edu.year})</span>}</p>
-                      <p className="text-sm text-gray-600">{edu.institution}</p>
-                      {edu.grade && <p className="text-sm">Grade: {edu.grade}</p>}
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {internships.some((intern) => intern.company || intern.role || intern.duration || intern.description) && (
-              <section>
-                <h3 className="text-lg font-semibold border-b border-gray-300 mb-2">Internships</h3>
-                <div className="space-y-4">
-                  {internships.map((intern, i) => (intern.company || intern.role || intern.duration || intern.description) && (
-                    <div key={i}>
-                      <p className="font-bold text-sm">{intern.role} <span className="font-normal text-gray-500 text-xs">| {intern.company}</span></p>
-                      {intern.duration && <p className="text-sm text-gray-600">{intern.duration}</p>}
-                      {intern.description && <p className="text-sm mt-1">{intern.description}</p>}
-                    </div>
-                  ))}
-                </div>
               </section>
             )}
 
             {projects.some((proj) => proj.title || proj.description || proj.link) && (
               <section>
-                <h3 className="text-lg font-semibold border-b border-gray-300 mb-2">Projects</h3>
+                <h3 className="text-lg font-semibold border-b mb-2">Projects</h3>
                 <div className="space-y-4">
-                  {projects.map((proj, i) => (proj.title || proj.description || proj.link) && (
-                    <div key={i}>
-                      <p className="font-bold text-sm">{proj.title}</p>
-                      {proj.description && <p className="text-sm mt-1">{proj.description}</p>}
-                      {proj.link && (
-                        <a href={proj.link} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline text-sm">
-                          View Project
-                        </a>
-                      )}
-                    </div>
-                  ))}
+                  {projects.map(
+                    (proj, i) =>
+                      (proj.title || proj.description || proj.link) && (
+                        <div key={i}>
+                          <p className="font-bold text-sm">{proj.title}</p>
+                          {proj.description && <p className="text-sm mt-1">{proj.description}</p>}
+                          {proj.link && (
+                            <a
+                              href={proj.link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="tooltip-link text-sm"
+                              data-url={proj.link}
+                            >
+                              View Project
+                            </a>
+                          )}
+                        </div>
+                      )
+                  )}
                 </div>
               </section>
             )}
-
             {achievements.some((a) => a) && (
               <section>
                 <h3 className="text-lg font-semibold border-b border-gray-300 mb-2">Achievements / Awards</h3>
