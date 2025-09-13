@@ -53,7 +53,7 @@ const BlueHeaderTemplate = ({ data = {} }) => {
       {hasBasicInfo && (
         <div
           style={{
-            background: "#1976d2",
+            background: "#3a8a95ff",
             color: "white",
             padding: "30px 20px",
             textAlign: "center",
@@ -162,7 +162,7 @@ const BlueHeaderTemplate = ({ data = {} }) => {
                       </p>
                       {proj.description && <p>{proj.description}</p>}
                       {proj.link && (
-                        <a href={proj.link} target="_blank" rel="noopener noreferrer">
+                        <a href={proj.link} target="_blank" rel="noopener noreferrer " style={{ color: "Blue" }}>
                           View Project
                         </a>
                       )}

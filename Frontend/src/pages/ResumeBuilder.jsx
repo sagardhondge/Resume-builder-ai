@@ -546,17 +546,24 @@ const ResumeBuilder = () => {
         ].map((field, idx) =>
           currentStep === idx + 5 ? (
             <div key={field}>
-              {form[field].map((item, index) => (
-                <input
-                  key={index}
-                  className="form-control mb-2"
-                  placeholder={field.replace(/([A-Z])/g, " $1")}
-                  value={item}
-                  onChange={(e) =>
-                    handleChange(field, null, e.target.value, index)
-                  }
-                />
-              ))}
+        {currentStep === 5 && (
+          <textarea
+          className="form-control"
+          rows={5}
+          placeholder="Enter one skill per line"
+          value={form.technicalSkills.join("\n")}
+          onChange={(e) =>
+          setForm({
+          ...form,
+          technicalSkills: e.target.value
+          .split(".")
+          .map((s) => s.trim())
+          .filter((s) => s !== ""),
+         })
+        }
+          />
+            )}
+
               <button
                 className="btn btn-outline-primary"
                 onClick={() => addEntry(field, "")}

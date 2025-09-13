@@ -99,7 +99,7 @@ const Templates = ({ data }) => {
                     : tpl === "minimal"
                     ? "#6c757d"
                     : tpl === "blueheader"
-                    ? "#007BFF"
+                    ? "#22b7ceff"
                     : tpl === "blackheader"
                     ? "#000000"
                     : tpl === "greensidebar"

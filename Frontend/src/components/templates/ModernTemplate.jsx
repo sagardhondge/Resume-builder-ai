@@ -47,7 +47,8 @@ const ModernTemplate = ({ data = {} }) => {
     >
 {/* ===== Header / Basic Info ===== */}
 {hasBasicInfo && (
-  <div style={{ textAlign: "center", borderBottom: "3px solid #333", marginBottom: "15px", paddingBottom: "10px" }}>
+  <div style={{ textAlign: "center", borderBottom: "3px solid #333",
+   marginBottom: "15px", paddingBottom: "10px",background: "#bdbdbdff" }}>
     {(basicInfo.firstName || basicInfo.lastName) && (
       <h1 style={{ margin: 0, fontSize: "28px", color: "#222" }}>
         {basicInfo.firstName}{" "}
@@ -56,10 +57,10 @@ const ModernTemplate = ({ data = {} }) => {
       </h1>
     )}
     <p>
-      {basicInfo.email && <>📧 {basicInfo.email} | </>}
-      {basicInfo.phone && <>📞 {basicInfo.phone} | </>}
-      {basicInfo.currentAddress && <>📍 {basicInfo.currentAddress}</>}
-
+      {basicInfo.email && <> {basicInfo.email} | </>}
+      {basicInfo.phone && <> {basicInfo.phone} | </>}
+      {basicInfo.currentAddress && <> {basicInfo.currentAddress}</>}
+        <br />
       {basicInfo.github && (
         <>
           <a href={basicInfo.github} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:text-blue-900 mr-1">

@@ -68,10 +68,33 @@ const ProfessionalTemplate = React.forwardRef(({ data = {} }, ref) => {
               {basicInfo.firstName} {basicInfo.middleName || ""} {basicInfo.lastName}
             </h1>
             <p className="text-sm text-gray-600">
-              {basicInfo.email && <span className="mr-1">📧 {basicInfo.email} |</span>}
-              {basicInfo.phone && <span className="mr-1">📞 {basicInfo.phone} |</span>}
-              {basicInfo.currentAddress && <span className="mr-1">📍 {basicInfo.currentAddress}</span>}
+              {basicInfo.email && <span className="mr-1"> {basicInfo.email} |</span>}
+              {basicInfo.phone && <span className="mr-1"> {basicInfo.phone} |</span>}
+              {basicInfo.currentAddress && <span className="mr-1"> {basicInfo.currentAddress}</span>}
+              {basicInfo.dob && <span className="mr-1"> | DOB: {basicInfo.dob}</span>}
             </p>
+                          {basicInfo.github && (
+                <>
+                  <a href={basicInfo.github} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:text-blue-900 mr-1">
+                    GitHub
+                  </a>
+                  |{" "}
+                </>
+              )}
+              {basicInfo.linkedin && (
+                <>
+                  <a href={basicInfo.linkedin} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:text-blue-900 mr-1">
+                    LinkedIn
+                  </a>
+                  |{" "}
+                </>
+              )}
+              {basicInfo.portfolio && (
+                <a href={basicInfo.portfolio} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:text-blue-900 mr-1">
+                  Portfolio
+                </a>
+              )}
+
             <hr className="my-4 border-t-2 border-gray-300" />
           </div>
         )}
@@ -114,20 +137,26 @@ const ProfessionalTemplate = React.forwardRef(({ data = {} }, ref) => {
         )}
 
         {/* ===== Projects ===== */}
-        {projects.length > 0 && projects.some((proj) => proj.title || proj.description || proj.link) && (
-          <section className="mb-6">
-            <h3 className="text-lg font-semibold border-b border-gray-300 mb-2">Projects</h3>
-            {projects.map((proj, i) =>
-              (proj.title || proj.description || proj.link) && (
-                <p key={i} className="text-sm">
-                  <strong className="font-medium">{proj.title}</strong>
-                  {proj.description && ` - ${proj.description}`}
-                  {proj.link && <> - <a href={proj.link} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">View</a></>}
-                </p>
-              )
-            )}
-          </section>
-        )}
+{projects.length > 0 &&
+  projects.some((p) => p.title || p.description || p.link) && (
+    <Section
+      title="Projects"
+      content={projects.map(
+        (proj, i) =>
+          (proj.title || proj.description || proj.link) && (
+            <div key={i}>
+              <p><strong>{proj.title}</strong></p>
+              {proj.description && <p>{proj.description}</p>}
+              {proj.link && (
+                <a href={proj.link} target="_blank" rel="noopener noreferrer">
+                  Project Link
+                </a>
+              )}
+            </div>
+          )
+      )}
+    />
+  )}
 
         {/* ===== Technical Skills ===== */}
         {technicalSkills.length > 0 && technicalSkills.some((s) => s && s.trim() !== "") && (
