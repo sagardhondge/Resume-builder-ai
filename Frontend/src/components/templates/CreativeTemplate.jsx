@@ -161,15 +161,6 @@ const CreativeTemplate = ({ data = {} }) => {
         </>
       )}
 
-      {/* ===== Achievements / Awards ===== */}
-      {achievements.length > 0 && achievements.some((a) => a && a.trim() !== "") && (
-        <>
-          <h2>Achievements / Awards</h2>
-          <ul>{achievements.map((a, i) => a && <li key={i}>{a}</li>)}</ul>
-          <hr style={{ border: "1px dashed #2a52be" }} />
-        </>
-      )}
-
       {/* ===== Co-Curricular Activities ===== */}
       {coCurricular.length > 0 && coCurricular.some((c) => c && c.trim() !== "") && (
         <>
@@ -187,7 +178,16 @@ const CreativeTemplate = ({ data = {} }) => {
           <hr style={{ border: "1px dashed #2a52be" }} />
         </>
       )}
-      
+
+      {/* ===== Achievements / Awards ===== */}
+      {achievements.length > 0 && achievements.some((a) => a && a.trim() !== "") && (
+        <>
+          <h2>Achievements / Awards</h2>
+          <ul>{achievements.map((a, i) => a && <li key={i}>{a}</li>)}</ul>
+          <hr style={{ border: "1px dashed #2a52be" }} />
+        </>
+      )}
+
 
       {/* ===== Languages ===== */}
       {languages.length > 0 && languages.some((l) => l && l.trim() !== "") && (
