@@ -54,6 +54,8 @@ const GreenSidebarTemplate = ({ data = {} }) => {
         {(basicInfo.email || basicInfo.phone || basicInfo.address || basicInfo.dob) && (
           <>
             <h3>Contact</h3>
+            {basicInfo.fullName && <p>Name: {basicInfo.fullName}</p>}
+            {basicInfo.middleName && <p>Middle Name: {basicInfo.middleName}</p>}
             {basicInfo.email && <p>Email: {basicInfo.email}</p>}
             {basicInfo.phone && <p>Phone: {basicInfo.phone}</p>}
             {basicInfo.address && <p>Address: {basicInfo.address}</p>}
