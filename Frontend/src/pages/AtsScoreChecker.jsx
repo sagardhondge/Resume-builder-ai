@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import API from "../utils/axios";
-import { FaUpload, FaCheckCircle, FaTimesCircle, FaExclamationCircle } from "react-icons/fa";
+import atsPreviewImg from "../assets/ats-preview.png"; // add the first image here
 
 const AtsScoreChecker = () => {
   const [resumeFile, setResumeFile] = useState(null);
   const [jobDescription, setJobDescription] = useState("");
   const [score, setScore] = useState(null);
-  const [checks, setChecks] = useState([]); // store details from backend
+  const [checks, setChecks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -38,7 +38,7 @@ const AtsScoreChecker = () => {
       });
 
       setScore(data.score);
-      setChecks(data.checks || []); // expect checks array from backend
+      setChecks(data.checks || []);
     } catch (err) {
       setError("Error checking ATS score");
     } finally {
@@ -47,10 +47,10 @@ const AtsScoreChecker = () => {
   };
 
   return (
-    <div className="container-fluid min-vh-100 d-flex align-items-center bg-light py-5">
-      <div className="row w-100">
-        {/* Left Section */}
-        <div className="col-md-6 d-flex flex-column justify-content-center px-5 mb-4 mb-md-0">
+    <div className="container-fluid py-5 bg-light">
+      <div className="row align-items-center">
+        {/* Left: Upload Form */}
+        <div className="col-md-6 px-5 mb-4 mb-md-0">
           <h2 className="fw-bold display-6 mb-3">Is your resume good enough?</h2>
           <p className="text-muted mb-4">
             A free and fast AI resume checker doing crucial checks to ensure your resume
@@ -95,57 +95,63 @@ const AtsScoreChecker = () => {
           {error && <p className="text-danger mt-3 text-center">{error}</p>}
         </div>
 
-        {/* Right Section */}
-        <div className="col-md-6 d-flex align-items-center">
-          <div className="card shadow w-100">
-            <div className="card-body text-center">
-              {score !== null ? (
-                <>
-                  <h4 className="fw-bold mb-3">Resume Score</h4>
-                  <h2 className={`${score > 70 ? "text-success" : score > 40 ? "text-warning" : "text-danger"}`}>
-                    {score}/100
-                  </h2>
+        {/* Right: Score / Image */}
+        <div className="col-md-6 text-center">
+          {score !== null ? (
+            <div className="card shadow p-4">
+              <h4 className="fw-bold mb-3">Resume Score</h4>
+              <h2
+                className={`${
+                  score > 70 ? "text-success" : score > 40 ? "text-warning" : "text-danger"
+                }`}
+              >
+                {score}/100
+              </h2>
 
-                  <div className="progress my-3" style={{ height: "25px" }}>
-                    <div
-                      className={`progress-bar ${score > 70 ? "bg-success" : score > 40 ? "bg-warning" : "bg-danger"}`}
-                      role="progressbar"
-                      style={{ width: `${score}%` }}
-                      aria-valuenow={score}
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    >
-                      {score}%
-                    </div>
-                  </div>
+              <div className="progress my-3" style={{ height: "25px" }}>
+                <div
+                  className={`progress-bar ${
+                    score > 70 ? "bg-success" : score > 40 ? "bg-warning" : "bg-danger"
+                  }`}
+                  role="progressbar"
+                  style={{ width: `${score}%` }}
+                  aria-valuenow={score}
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                >
+                  {score}%
+                </div>
+              </div>
 
-                  {/* Detailed Checks */}
-                  <ul className="list-unstyled mt-4 text-start">
-                    {checks.length > 0 ? (
-                      checks.map((check, idx) => (
-                        <li key={idx} className="d-flex align-items-center mb-2">
-                          {check.status === "pass" && (
-                            <FaCheckCircle className="text-success me-2" />
-                          )}
-                          {check.status === "fail" && (
-                            <FaTimesCircle className="text-danger me-2" />
-                          )}
-                          {check.status === "warn" && (
-                            <FaExclamationCircle className="text-warning me-2" />
-                          )}
-                          <span>{check.name}</span>
-                        </li>
-                      ))
-                    ) : (
-                      <p className="text-muted">No detailed checks available.</p>
-                    )}
-                  </ul>
-                </>
-              ) : (
-                <p className="text-muted">Upload a resume and job description to see your ATS score.</p>
-              )}
+              {/* Checks */}
+              <ul className="list-unstyled text-start mt-3">
+                {checks.length > 0 ? (
+                  checks.map((check, idx) => (
+                    <li key={idx} className="mb-2">
+                      {check.status === "pass" && (
+                        <span className="text-success">✔ </span>
+                      )}
+                      {check.status === "fail" && (
+                        <span className="text-danger">✘ </span>
+                      )}
+                      {check.status === "warn" && (
+                        <span className="text-warning">⚠ </span>
+                      )}
+                      {check.name}
+                    </li>
+                  ))
+                ) : (
+                  <p className="text-muted">No detailed checks available.</p>
+                )}
+              </ul>
             </div>
-          </div>
+          ) : (
+            <img
+              src={atsPreviewImg}
+              alt="ATS Preview"
+              className="img-fluid rounded shadow"
+            />
+          )}
         </div>
       </div>
     </div>
