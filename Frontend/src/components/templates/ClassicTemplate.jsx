@@ -209,6 +209,50 @@ const ProfessionalTemplate = ({ data = {} }) => {
             <hr className="my-6 border-t-2 border-gray-300" />
           </div>
         )}
+        
+        {/* ===== Certifications ===== */}
+        {certifications.length > 0 && certifications.some((c) => c && c.trim() !== "") && (
+          <div className="mb-6">
+            <h2 className="text-xl font-bold text-gray-800 border-b-2 border-gray-400 pb-1 mb-2">Certifications</h2>
+            <ul className="list-disc list-inside space-y-1 text-sm">
+              {certifications.map((cert, i) => cert && <li key={i}>{cert}</li>)}
+            </ul>
+            <hr className="my-6 border-t-2 border-gray-300" />
+          </div>
+        )}
+
+        {/* ===== Achievements ===== */}
+        {achievements.length > 0 && achievements.some((a) => a && a.trim() !== "") && (
+          <div className="mb-6">
+            <h2 className="text-xl font-bold text-gray-800 border-b-2 border-gray-400 pb-1 mb-2">Achievements / Awards</h2>
+            <ul className="list-disc list-inside space-y-1 text-sm">
+              {achievements.map((ach, i) => ach && <li key={i}>{ach}</li>)}
+            </ul>
+            <hr className="my-6 border-t-2 border-gray-300" />
+          </div>
+        )}
+
+        {/* ===== Co-Curricular ===== */}
+        {coCurricular.length > 0 && coCurricular.some((c) => c && c.trim() !== "") && (
+          <div className="mb-6">
+            <h2 className="text-xl font-bold text-gray-800 border-b-2 border-gray-400 pb-1 mb-2">Co-Curricular Activities</h2>
+            <ul className="list-disc list-inside space-y-1 text-sm">
+              {coCurricular.map((act, i) => act && <li key={i}>{act}</li>)}
+            </ul>
+            <hr className="my-6 border-t-2 border-gray-300" />
+          </div>
+        )}
+
+        {/* ===== Extra-Curricular ===== */}
+        {extraCurricular.length > 0 && extraCurricular.some((c) => c && c.trim() !== "") && (
+          <div className="mb-6">
+            <h2 className="text-xl font-bold text-gray-800 border-b-2 border-gray-400 pb-1 mb-2">Extra-Curricular Activities</h2>
+            <ul className="list-disc list-inside space-y-1 text-sm">
+              {extraCurricular.map((act, i) => act && <li key={i}>{act}</li>)}
+            </ul>
+            <hr className="my-6 border-t-2 border-gray-300" />
+          </div>
+        )}
 
         {/* ===== Strengths ===== */}
         {strengths.length > 0 && strengths.some((s) => s && s.trim() !== "") && (
@@ -257,50 +301,6 @@ const ProfessionalTemplate = ({ data = {} }) => {
           <div className="mb-6">
             <h2 className="text-xl font-bold text-gray-800 border-b-2 border-gray-400 pb-1 mb-2">Family Background</h2>
             <p className="text-sm">{familyBackground}</p>
-            <hr className="my-6 border-t-2 border-gray-300" />
-          </div>
-        )}
-
-        {/* ===== Certifications ===== */}
-        {certifications.length > 0 && certifications.some((c) => c && c.trim() !== "") && (
-          <div className="mb-6">
-            <h2 className="text-xl font-bold text-gray-800 border-b-2 border-gray-400 pb-1 mb-2">Certifications</h2>
-            <ul className="list-disc list-inside space-y-1 text-sm">
-              {certifications.map((cert, i) => cert && <li key={i}>{cert}</li>)}
-            </ul>
-            <hr className="my-6 border-t-2 border-gray-300" />
-          </div>
-        )}
-
-        {/* ===== Achievements ===== */}
-        {achievements.length > 0 && achievements.some((a) => a && a.trim() !== "") && (
-          <div className="mb-6">
-            <h2 className="text-xl font-bold text-gray-800 border-b-2 border-gray-400 pb-1 mb-2">Achievements / Awards</h2>
-            <ul className="list-disc list-inside space-y-1 text-sm">
-              {achievements.map((ach, i) => ach && <li key={i}>{ach}</li>)}
-            </ul>
-            <hr className="my-6 border-t-2 border-gray-300" />
-          </div>
-        )}
-
-        {/* ===== Co-Curricular ===== */}
-        {coCurricular.length > 0 && coCurricular.some((c) => c && c.trim() !== "") && (
-          <div className="mb-6">
-            <h2 className="text-xl font-bold text-gray-800 border-b-2 border-gray-400 pb-1 mb-2">Co-Curricular Activities</h2>
-            <ul className="list-disc list-inside space-y-1 text-sm">
-              {coCurricular.map((act, i) => act && <li key={i}>{act}</li>)}
-            </ul>
-            <hr className="my-6 border-t-2 border-gray-300" />
-          </div>
-        )}
-
-        {/* ===== Extra-Curricular ===== */}
-        {extraCurricular.length > 0 && extraCurricular.some((c) => c && c.trim() !== "") && (
-          <div className="mb-6">
-            <h2 className="text-xl font-bold text-gray-800 border-b-2 border-gray-400 pb-1 mb-2">Extra-Curricular Activities</h2>
-            <ul className="list-disc list-inside space-y-1 text-sm">
-              {extraCurricular.map((act, i) => act && <li key={i}>{act}</li>)}
-            </ul>
             <hr className="my-6 border-t-2 border-gray-300" />
           </div>
         )}

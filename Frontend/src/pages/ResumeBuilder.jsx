@@ -159,15 +159,6 @@ const ResumeBuilder = () => {
         <button className="btn btn-success" onClick={handleDownload}>
           Download Resume
         </button>
-        {/* <button
-          className="btn btn-primary"
-          onClick={() => {
-            setShowPreview(false);
-            setCurrentStep(0);
-          }}
-        >
-          Select Template
-        </button> */}
       </div>
 
       <h2 className="text-center mb-4">{sections[currentStep]}</h2>
