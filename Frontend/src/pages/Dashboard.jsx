@@ -13,9 +13,9 @@ const Dashboard = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setFlipped(prev => !prev);
-    }, 1000); 
+    }, 3000); 
     return () => clearInterval(interval);
-  }, []);
+  }, [flipped]);
 
   const handleChatClick = () => {
     navigate("/ai-chat"); // AI chat route
@@ -72,7 +72,7 @@ const Dashboard = () => {
                 ⚡ 42% higher response rate from recruiters
               </p>
             </div>
-            {/* Trustpilot Rating */}
+            Trustpilot Rating
             <div className="mt-4 d-flex align-items-center gap-3">
               <div>
                 <h5 className="mb-1">Excellent</h5>
