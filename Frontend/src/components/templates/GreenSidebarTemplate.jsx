@@ -21,12 +21,10 @@ const GreenSidebarTemplate = ({ data = {} }) => {
     familyBackground,
   } = data;
 
-  const hasBasicInfo =
-    basicInfo.fullName ||
-    basicInfo.email ||
-    basicInfo.phone ||
-    basicInfo.address ||
-    basicInfo.dob;
+  // ✅ Construct full name properly
+  const fullName = [basicInfo.firstName, basicInfo.middleName, basicInfo.lastName]
+    .filter(Boolean) // remove empty strings
+    .join(" ");
 
   const isNumber = (value) => /^\d+$/.test(value);
 
@@ -49,16 +47,15 @@ const GreenSidebarTemplate = ({ data = {} }) => {
     >
       {/* Sidebar */}
       <div style={{ width: "30%", background: "#2e7d32", color: "white", padding: "20px" }}>
-        {basicInfo.fullName && <h2>{basicInfo.fullName}</h2>}
+        {/* ✅ Show full name */}
+        {fullName && <h2>{fullName}</h2>}
 
-        {(basicInfo.email || basicInfo.phone || basicInfo.address || basicInfo.dob) && (
+        {(basicInfo.email || basicInfo.phone || basicInfo.currentAddress || basicInfo.dob) && (
           <>
             <h3>Contact</h3>
-            {basicInfo.fullName && <p>Name: {basicInfo.fullName}</p>}
-            {basicInfo.middleName && <p>Middle Name: {basicInfo.middleName}</p>}
             {basicInfo.email && <p>Email: {basicInfo.email}</p>}
             {basicInfo.phone && <p>Phone: {basicInfo.phone}</p>}
-            {basicInfo.address && <p>Address: {basicInfo.address}</p>}
+            {basicInfo.currentAddress && <p>Address: {basicInfo.currentAddress}</p>}
             {basicInfo.dob && <p>DOB: {basicInfo.dob}</p>}
           </>
         )}
