@@ -45,45 +45,44 @@ const ModernTemplate = ({ data = {} }) => {
         boxSizing: "border-box",
       }}
     >
-      {/* ===== Header / Basic Info ===== */}
-      {hasBasicInfo && (
-        <div style={{ textAlign: "center", borderBottom: "3px solid #333", marginBottom: "15px", paddingBottom: "10px" }}>
-          {(basicInfo.firstName || basicInfo.lastName) && (
-            <h1 style={{ margin: 0, fontSize: "28px", color: "#222" }}>
-              {basicInfo.firstName}{" "}
-              {basicInfo.middleName && basicInfo.middleName + " "}
-              {basicInfo.lastName}
-            </h1>
-          )}
-          <p>
-            {basicInfo.email && <>📧 {basicInfo.email} | </>}
-            {basicInfo.phone && <>📞 {basicInfo.phone} | </>}
-            {basicInfo.currentAddress && <>📍 {basicInfo.currentAddress}</>}
-              {basicInfo.github && (
-                <>
-                  <a href={basicInfo.github} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:text-blue-900 mr-1">
-                    GitHub
-                  </a>
-                  |{" "}
-                </>
-              )}
-              {basicInfo.linkedin && (
-                <>
-                  <a href={basicInfo.linkedin} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:text-blue-900 mr-1">
-                    LinkedIn
-                  </a>
-                  |{" "}
-                </>
-              )}
-              {basicInfo.portfolio && (
-                <a href={basicInfo.portfolio} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:text-blue-900 mr-1">
-                  Portfolio
-                </a>
-              )}
-            {basicInfo.dob && <> | DOB: {basicInfo.dob}</>}
-          </p>
-        </div>
+{/* ===== Header / Basic Info ===== */}
+{hasBasicInfo && (
+  <div style={{ textAlign: "center", borderBottom: "3px solid #333", marginBottom: "15px", paddingBottom: "10px" }}>
+    {(basicInfo.firstName || basicInfo.lastName) && (
+      <h1 style={{ margin: 0, fontSize: "28px", color: "#222" }}>
+        {basicInfo.firstName}{" "}
+        {basicInfo.middleName && basicInfo.middleName + " "}
+        {basicInfo.lastName}
+      </h1>
+    )}
+    <p>
+      {basicInfo.email && <>📧 {basicInfo.email} | </>}
+      {basicInfo.phone && <>📞 {basicInfo.phone} | </>}
+      {basicInfo.currentAddress && <>📍 {basicInfo.currentAddress}</>}
+
+      {basicInfo.github && (
+        <>
+          <a href={basicInfo.github} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:text-blue-900 mr-1">
+            GitHub
+          </a>{" | "}
+        </>
       )}
+      {basicInfo.linkedin && (
+        <>
+          <a href={basicInfo.linkedin} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:text-blue-900 mr-1">
+            LinkedIn
+          </a>{" | "}
+        </>
+      )}
+      {basicInfo.portfolio && (
+        <a href={basicInfo.portfolio} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:text-blue-900 mr-1">
+          Portfolio
+        </a>
+      )}
+      {basicInfo.dob && <> | DOB: {basicInfo.dob}</>}
+    </p>
+  </div>
+)}
 
       {/* ===== Two Column Layout ===== */}
       <div style={{ display: "flex", gap: "20px" }}>
@@ -146,24 +145,27 @@ const ModernTemplate = ({ data = {} }) => {
             )}
 
           {/* Projects */}
-          {projects.length > 0 &&
-            projects.some((p) => p.title || p.description || p.link) && (
-              <Section
-                title="Projects"
-                content={projects.map(
-                  (proj, i) =>
-                    (proj.title || proj.description || proj.link) && (
-                      <div key={i}>
-                        <p><strong>{proj.title}</strong></p>
-                        {proj.description && <p>{proj.description}</p>}
-                        {proj.link && (
-                          <a href={proj.link} target="_blank" rel="noopener noreferrer">{proj.link}</a>
-                        )}
-                      </div>
-                    )
-                )}
-              />
-            )}
+{projects.length > 0 &&
+  projects.some((p) => p.title || p.description || p.link) && (
+    <Section
+      title="Projects"
+      content={projects.map(
+        (proj, i) =>
+          (proj.title || proj.description || proj.link) && (
+            <div key={i}>
+              <p><strong>{proj.title}</strong></p>
+              {proj.description && <p>{proj.description}</p>}
+              {proj.link && (
+                <a href={proj.link} target="_blank" rel="noopener noreferrer">
+                  Project Link
+                </a>
+              )}
+            </div>
+          )
+      )}
+    />
+  )}
+
 
           {/* Internships */}
           {internships.length > 0 &&
