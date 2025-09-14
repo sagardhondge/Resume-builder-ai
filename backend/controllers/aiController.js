@@ -1,33 +1,21 @@
-import axios from "axios";
+import OpenAI from "openai";
 
-// ATS Controller
 export const getAtsScore = async (req, res) => {
   try {
     const { jobDescription } = req.body;
     const resumeText = req.file ? req.file.buffer.toString("utf-8") : null;
 
-    if (!resumeText || !jobDescription) {
-      return res
-        .status(400)
-        .json({ message: "Resume text & job description required" });
-    }
+    if (!resumeText || !jobDescription)
+      return res.status(400).json({ message: "Resume text & job description required" });
 
-    console.log("File received:", req.file?.originalname);
-    console.log("Job description length:", jobDescription.length);
+    // Initialize OpenAI client directly
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY, // directly here
+    });
 
     const prompt = `
-You are an ATS (Applicant Tracking System) analyzer.
-Evaluate the following resume against the job description.
-Return a JSON with:
-{
-  "score": number (0-100),
-  "checks": [
-    { "name": "Contains important job keywords", "status": "pass|fail|warn" },
-    { "name": "Work experience relevance", "status": "pass|fail|warn" },
-    { "name": "Achievements are quantified", "status": "pass|fail|warn" }
-  ],
-  "suggestions": ["list", "of", "improvements"]
-}
+You are an ATS analyzer. Evaluate this resume vs job description.
+Return JSON with score, checks, and suggestions.
 
 Job Description:
 ${jobDescription}
@@ -36,38 +24,27 @@ Resume:
 ${resumeText}
 `;
 
-    const response = await axios.post(
-      "https://api-inference.huggingface.co/models/google/flan-t5-small",
-      { inputs: prompt },
-      {
-        headers: { Authorization: `Bearer ${process.env.HF_ACCESS_TOKEN}` },
-      }
-    );
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        { role: "system", content: "You are an expert ATS resume analyzer." },
+        { role: "user", content: prompt },
+      ],
+      temperature: 0,
+    });
 
-    const aiOutput = response.data[0]?.generated_text || "{}";
+    const aiOutput = response.choices[0].message.content;
 
     let parsed;
     try {
       parsed = JSON.parse(aiOutput);
     } catch {
-      // fallback if AI output is not JSON
-      parsed = {
-        score: Math.floor(Math.random() * 30) + 60,
-        checks: [
-          { name: "Contains important keywords", status: "warn" },
-          { name: "Work experience relevance", status: "warn" },
-        ],
-        suggestions: [
-          "Improve formatting",
-          "Add measurable achievements",
-          "Highlight relevant experience",
-        ],
-      };
+      parsed = { score: 70, checks: [], suggestions: [] }; // fallback
     }
 
     res.json(parsed);
-  } catch (err) {
-    console.error("HF ATS Error:", err.response?.data || err.message);
-    res.status(500).json({ message: "Error analyzing ATS score" });
+  } catch (error) {
+    console.error("OpenAI Error:", error.message);
+    res.status(500).json({ message: "Error analyzing resume" });
   }
 };
