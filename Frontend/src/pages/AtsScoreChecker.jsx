@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import API from "../utils/axios";
 import atsPreviewImg from "../assets/ats-preview.png";
-import "./AtsScoreChecker.css"; // optional CSS for skeletons
+import "./AtsScoreChecker.css"; 
 
 const AtsScoreChecker = () => {
   const [resumeFile, setResumeFile] = useState(null);
@@ -38,7 +38,17 @@ const AtsScoreChecker = () => {
 
       setScore(data.score);
       setChecks(data.checks || []);
-      setSuggestions(data.suggestions || []);
+
+      // ✅ Always provide fallback suggestions
+      setSuggestions(
+        data.suggestions && data.suggestions.length > 0
+          ? data.suggestions
+          : [
+              "Tailor your resume by adding more job-specific keywords.",
+              "Keep formatting simple and ATS-friendly (avoid tables/graphics).",
+              "Highlight measurable achievements (e.g., 'Increased sales by 20%').",
+            ]
+      );
     } catch (err) {
       setError("Error checking ATS score");
     } finally {
@@ -100,13 +110,19 @@ const AtsScoreChecker = () => {
           ) : score !== null ? (
             <div className="card shadow p-4">
               <h4 className="fw-bold mb-3">Resume Score</h4>
-              <h2 className={score > 70 ? "text-success" : score > 40 ? "text-warning" : "text-danger"}>
+              <h2
+                className={
+                  score > 70 ? "text-success" : score > 40 ? "text-warning" : "text-danger"
+                }
+              >
                 {score}/100
               </h2>
 
               <div className="progress my-3" style={{ height: "25px" }}>
                 <div
-                  className={`progress-bar ${score > 70 ? "bg-success" : score > 40 ? "bg-warning" : "bg-danger"}`}
+                  className={`progress-bar ${
+                    score > 70 ? "bg-success" : score > 40 ? "bg-warning" : "bg-danger"
+                  }`}
                   role="progressbar"
                   style={{ width: `${score}%` }}
                   aria-valuenow={score}
@@ -119,14 +135,18 @@ const AtsScoreChecker = () => {
 
               {/* Checks */}
               <ul className="list-unstyled text-start mt-3">
-                {checks.length > 0 ? checks.map((check, idx) => (
-                  <li key={idx} className="mb-2">
-                    {check.status === "pass" && <span className="text-success">✔ </span>}
-                    {check.status === "fail" && <span className="text-danger">✘ </span>}
-                    {check.status === "warn" && <span className="text-warning">⚠ </span>}
-                    {check.name}
-                  </li>
-                )) : <p className="text-muted">No detailed checks available.</p>}
+                {checks.length > 0 ? (
+                  checks.map((check, idx) => (
+                    <li key={idx} className="mb-2">
+                      {check.status === "pass" && <span className="text-success">✔ </span>}
+                      {check.status === "fail" && <span className="text-danger">✘ </span>}
+                      {check.status === "warn" && <span className="text-warning">⚠ </span>}
+                      {check.name}
+                    </li>
+                  ))
+                ) : (
+                  <p className="text-muted">No detailed checks available.</p>
+                )}
               </ul>
 
               {/* Suggestions */}
@@ -135,14 +155,20 @@ const AtsScoreChecker = () => {
                   <h5 className="fw-bold">Suggestions to Improve:</h5>
                   <ul>
                     {suggestions.map((sugg, idx) => (
-                      <li key={idx} className="text-muted">{sugg}</li>
+                      <li key={idx} className="text-muted">
+                        {sugg}
+                      </li>
                     ))}
                   </ul>
                 </div>
               )}
             </div>
           ) : (
-            <img src={atsPreviewImg} alt="ATS Preview" className="img-fluid rounded shadow" />
+            <img
+              src={atsPreviewImg}
+              alt="ATS Preview"
+              className="img-fluid rounded shadow"
+            />
           )}
         </div>
       </div>

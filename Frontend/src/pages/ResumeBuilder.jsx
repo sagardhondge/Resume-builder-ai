@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useReactToPrint } from "react-to-print";
 import Templates from "../components/Templates";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
+ const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const sections = [
   "Basic Info",
@@ -63,10 +63,12 @@ const ResumeBuilder = () => {
   const [selectedTemplate, setSelectedTemplate] = useState("classic");
   const [showPreview, setShowPreview] = useState(false);
   const [form, setForm] = useState(initialFormState);
-  const [resumeId, setResumeId] = useState(null); // 🔹 Track resume for update
+  const [resumeId, setResumeId] = useState(null);
   const [showRestorePrompt, setShowRestorePrompt] = useState(false);
 
-  // 🔹 Load resume from backend (if logged in)
+  const resumeRef = useRef();
+
+  // Load resume from backend
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) return;
@@ -77,22 +79,19 @@ const ResumeBuilder = () => {
       .then((res) => res.json())
       .then((resumes) => {
         if (resumes && resumes.length > 0) {
-          setForm(resumes[0]); // take first resume
+          setForm(resumes[0]);
           setResumeId(resumes[0]._id);
         } else {
-          // check local storage if no backend resume
           const savedData = localStorage.getItem("resumeData");
           if (savedData) setShowRestorePrompt(true);
         }
       })
-      .catch((err) => console.error("Error fetching resume:", err));
+      .catch(console.error);
   }, []);
 
-  // 🔹 Auto-save form locally
+  // Auto-save locally
   useEffect(() => {
-    if (form) {
-      localStorage.setItem("resumeData", JSON.stringify(form));
-    }
+    if (form) localStorage.setItem("resumeData", JSON.stringify(form));
   }, [form]);
 
   const handleRestore = () => {
@@ -117,10 +116,7 @@ const ResumeBuilder = () => {
       }
       setForm({ ...form, [section]: updatedArray });
     } else if (typeof form[section] === "object") {
-      setForm({
-        ...form,
-        [section]: { ...form[section], [field]: value },
-      });
+      setForm({ ...form, [section]: { ...form[section], [field]: value } });
     } else {
       setForm({ ...form, [section]: value });
     }
@@ -130,7 +126,12 @@ const ResumeBuilder = () => {
     setForm({ ...form, [section]: [...form[section], emptyEntry] });
   };
 
-  const resumeRef = useRef();
+  const removeEntry = (section, index) => {
+    const updated = [...form[section]];
+    updated.splice(index, 1);
+    setForm({ ...form, [section]: updated });
+  };
+
   const handlePrint = useReactToPrint({
     content: () => resumeRef.current,
   });
@@ -167,7 +168,6 @@ const ResumeBuilder = () => {
       });
 
       if (!res.ok) throw new Error("Failed to save resume");
-
       const data = await res.json();
       setResumeId(data._id);
       alert("✅ Resume saved successfully!");
@@ -185,10 +185,9 @@ const ResumeBuilder = () => {
 
   return (
     <div className="container py-4">
-      {/* 🔹 Restore Prompt */}
       {showRestorePrompt && (
         <div className="alert alert-warning d-flex justify-content-between align-items-center">
-          <span>⚠️ You have unsaved progress. Do you want to restore it?</span>
+          <span>⚠️ You have unsaved progress. Restore?</span>
           <div>
             <button className="btn btn-sm btn-success me-2" onClick={handleRestore}>
               Continue
@@ -200,7 +199,6 @@ const ResumeBuilder = () => {
         </div>
       )}
 
-      {/* Header Buttons */}
       <div className="d-flex justify-content-between mb-4 gap-2">
         <button className="btn btn-info" onClick={() => setShowPreview(true)}>
           Preview Resume
@@ -211,138 +209,29 @@ const ResumeBuilder = () => {
       </div>
 
       <h2 className="text-center mb-4">{sections[currentStep]}</h2>
-
       <div className="card shadow-sm p-4">
-        {/* STEP 0: Basic Info */}
+        {/* ================= STEP 0: Basic Info ================= */}
         {currentStep === 0 && (
           <div className="row g-3">
-            <div className="col-md-4">
-              <input
-                className="form-control"
-                placeholder="First Name"
-                value={form.basicInfo.firstName}
-                onChange={(e) =>
-                  handleChange("basicInfo", "firstName", e.target.value)
-                }
-              />
-            </div>
-            <div className="col-md-4">
-              <input
-                className="form-control"
-                placeholder="Middle Name"
-                value={form.basicInfo.middleName}
-                onChange={(e) =>
-                  handleChange("basicInfo", "middleName", e.target.value)
-                }
-              />
-            </div>
-            <div className="col-md-4">
-              <input
-                className="form-control"
-                placeholder="Last Name"
-                value={form.basicInfo.lastName}
-                onChange={(e) =>
-                  handleChange("basicInfo", "lastName", e.target.value)
-                }
-              />
-            </div>
-            <div className="col-md-6">
-              <input
-                type="date"
-                className="form-control"
-                value={form.basicInfo.dob}
-                onChange={(e) => handleChange("basicInfo", "dob", e.target.value)}
-              />
-            </div>
-            <div className="col-md-6">
-              <select
-                className="form-select"
-                value={form.basicInfo.gender}
-                onChange={(e) =>
-                  handleChange("basicInfo", "gender", e.target.value)
-                }
-              >
-                <option value="">Select Gender</option>
-                <option>Male</option>
-                <option>Female</option>
-              </select>
-            </div>
-            <div className="col-md-6">
-              <input
-                className="form-control"
-                placeholder="Email"
-                value={form.basicInfo.email}
-                onChange={(e) => handleChange("basicInfo", "email", e.target.value)}
-              />
-            </div>
-            <div className="col-md-6">
-              <input
-                className="form-control"
-                placeholder="Phone"
-                value={form.basicInfo.phone}
-                onChange={(e) => handleChange("basicInfo", "phone", e.target.value)}
-              />
-            </div>
-            <div className="col-md-6">
-              <input
-                className="form-control"
-                placeholder="Alternative Phone"
-                value={form.basicInfo.altPhone}
-                onChange={(e) =>
-                  handleChange("basicInfo", "altPhone", e.target.value)
-                }
-              />
-            </div>
-            <div className="col-md-6">
-              <input
-                className="form-control"
-                placeholder="LinkedIn Profile"
-                value={form.basicInfo.linkedin}
-                onChange={(e) =>
-                  handleChange("basicInfo", "linkedin", e.target.value)
-                }
-              />
-            </div>
-            <div className="col-md-6">
-              <input
-                className="form-control"
-                placeholder="GitHub Profile"
-                value={form.basicInfo.github}
-                onChange={(e) =>
-                  handleChange("basicInfo", "github", e.target.value)
-                }
-              />
-            </div>
-            <div className="col-md-6">
-              <input
-                className="form-control"
-                placeholder="Portfolio"
-                value={form.basicInfo.portfolio}
-                onChange={(e) =>
-                  handleChange("basicInfo", "portfolio", e.target.value)
-                }
-              />
-            </div>
-            <div className="col-md-6">
-              <input
-                className="form-control"
-                placeholder="Current Address"
-                value={form.basicInfo.currentAddress}
-                onChange={(e) =>
-                  handleChange("basicInfo", "currentAddress", e.target.value)
-                }
-              />
-            </div>
-            <div className="col-12">
-              <textarea
-                className="form-control"
-                placeholder="Permanent Address"
-                value={form.basicInfo.permanentAddress}
-                onChange={(e) =>
-                  handleChange("basicInfo", "permanentAddress", e.target.value)
-                }
-              />
-            </div>
+            {Object.keys(form.basicInfo).map((field) => (
+              <div className="col-md-6" key={field}>
+                {field === "permanentAddress" ? (
+                  <textarea
+                    className="form-control"
+                    placeholder={field}
+                    value={form.basicInfo[field]}
+                    onChange={(e) => handleChange("basicInfo", field, e.target.value)}
+                  />
+                ) : (
+                  <input
+                    className="form-control"
+                    placeholder={field}
+                    value={form.basicInfo[field]}
+                    onChange={(e) => handleChange("basicInfo", field, e.target.value)}
+                  />
+                )}
+              </div>
+            ))}
           </div>
         )}
 
@@ -350,189 +239,102 @@ const ResumeBuilder = () => {
         {currentStep === 1 && (
           <textarea
             className="form-control"
+            rows={5}
             placeholder="Career Objective"
             value={form.careerObjective}
-            onChange={(e) =>
-              handleChange("careerObjective", null, e.target.value)
-            }
+            onChange={(e) => handleChange("careerObjective", null, e.target.value)}
           />
         )}
 
-        {/* STEP 2: Education */}
+        {/* STEP 2–4: Education, Internships, Projects */}
         {currentStep === 2 && (
           <div>
-            {form.education.map((edu, index) => (
-              <div className="row g-3 mb-3" key={index}>
-                <div className="col-md-3">
-                  <input
-                    className="form-control"
-                    placeholder="Degree"
-                    value={edu.degree}
-                    onChange={(e) =>
-                      handleChange("education", "degree", e.target.value, index)
-                    }
-                  />
-                </div>
-                <div className="col-md-3">
-                  <input
-                    className="form-control"
-                    placeholder="Institution"
-                    value={edu.institution}
-                    onChange={(e) =>
-                      handleChange("education", "institution", e.target.value, index)
-                    }
-                  />
-                </div>
-                <div className="col-md-3">
-                  <input
-                    className="form-control"
-                    placeholder="Year"
-                    value={edu.year}
-                    onChange={(e) =>
-                      handleChange("education", "year", e.target.value, index)
-                    }
-                  />
-                </div>
-                <div className="col-md-3">
-                  <input
-                    className="form-control"
-                    placeholder="Grade"
-                    value={edu.grade}
-                    onChange={(e) =>
-                      handleChange("education", "grade", e.target.value, index)
-                    }
-                  />
+            {form.education.map((edu, idx) => (
+              <div className="row g-3 mb-3" key={idx}>
+                {Object.keys(edu).map((key) => (
+                  <div className="col-md-3" key={key}>
+                    <input
+                      className="form-control"
+                      placeholder={key}
+                      value={edu[key]}
+                      onChange={(e) => handleChange("education", key, e.target.value, idx)}
+                    />
+                  </div>
+                ))}
+                <div className="col-12">
+                  <button className="btn btn-outline-danger" onClick={() => removeEntry("education", idx)}>Remove</button>
                 </div>
               </div>
             ))}
-            <button
-              className="btn btn-outline-primary"
-              onClick={() =>
-                addEntry("education", {
-                  degree: "",
-                  institution: "",
-                  year: "",
-                  grade: "",
-                })
-              }
-            >
-              + Add Education
-            </button>
+            <button className="btn btn-outline-primary" onClick={() => addEntry("education", { degree: "", institution: "", year: "", grade: "" })}>+ Add Education</button>
           </div>
         )}
 
-        {/* STEP 3: Internships */}
         {currentStep === 3 && (
           <div>
-            {form.internships.map((intern, index) => (
-              <div className="row g-3 mb-3" key={index}>
-                <div className="col-md-4">
-                  <input
-                    className="form-control"
-                    placeholder="Company"
-                    value={intern.company}
-                    onChange={(e) =>
-                      handleChange("internships", "company", e.target.value, index)
-                    }
-                  />
-                </div>
-                <div className="col-md-4">
-                  <input
-                    className="form-control"
-                    placeholder="Role"
-                    value={intern.role}
-                    onChange={(e) =>
-                      handleChange("internships", "role", e.target.value, index)
-                    }
-                  />
-                </div>
-                <div className="col-md-4">
-                  <input
-                    className="form-control"
-                    placeholder="Duration"
-                    value={intern.duration}
-                    onChange={(e) =>
-                      handleChange("internships", "duration", e.target.value, index)
-                    }
-                  />
-                </div>
+            {form.internships.map((intern, idx) => (
+              <div className="row g-3 mb-3" key={idx}>
+                {Object.keys(intern).map((key) => (
+                  <div className={key === "description" ? "col-12" : "col-md-4"} key={key}>
+                    {key === "description" ? (
+                      <textarea
+                        className="form-control"
+                        placeholder={key}
+                        value={intern[key]}
+                        onChange={(e) => handleChange("internships", key, e.target.value, idx)}
+                      />
+                    ) : (
+                      <input
+                        className="form-control"
+                        placeholder={key}
+                        value={intern[key]}
+                        onChange={(e) => handleChange("internships", key, e.target.value, idx)}
+                      />
+                    )}
+                  </div>
+                ))}
                 <div className="col-12">
-                  <textarea
-                    className="form-control"
-                    placeholder="Description"
-                    value={intern.description}
-                    onChange={(e) =>
-                      handleChange("internships", "description", e.target.value, index)
-                    }
-                  />
+                  <button className="btn btn-outline-danger" onClick={() => removeEntry("internships", idx)}>Remove</button>
                 </div>
               </div>
             ))}
-            <button
-              className="btn btn-outline-primary"
-              onClick={() =>
-                addEntry("internships", {
-                  company: "",
-                  role: "",
-                  duration: "",
-                  description: "",
-                })
-              }
-            >
-              + Add Internship
-            </button>
+            <button className="btn btn-outline-primary" onClick={() => addEntry("internships", { company: "", role: "", duration: "", description: "" })}>+ Add Internship</button>
           </div>
         )}
 
-        {/* STEP 4: Projects */}
         {currentStep === 4 && (
           <div>
-            {form.projects.map((proj, index) => (
-              <div className="row g-3 mb-3" key={index}>
-                <div className="col-md-4">
-                  <input
-                    className="form-control"
-                    placeholder="Title"
-                    value={proj.title}
-                    onChange={(e) =>
-                      handleChange("projects", "title", e.target.value, index)
-                    }
-                  />
-                </div>
-                <div className="col-md-5">
-                  <textarea
-                    className="form-control"
-                    placeholder="Description"
-                    value={proj.description}
-                    onChange={(e) =>
-                      handleChange("projects", "description", e.target.value, index)
-                    }
-                  />
-                </div>
-                <div className="col-md-3">
-                  <input
-                    className="form-control"
-                    placeholder="Link"
-                    value={proj.link}
-                    onChange={(e) =>
-                      handleChange("projects", "link", e.target.value, index)
-                    }
-                  />
+            {form.projects.map((proj, idx) => (
+              <div className="row g-3 mb-3" key={idx}>
+                {Object.keys(proj).map((key) => (
+                  <div className={key === "description" ? "col-md-5" : key === "link" ? "col-md-3" : "col-md-4"} key={key}>
+                    {key === "description" ? (
+                      <textarea
+                        className="form-control"
+                        placeholder={key}
+                        value={proj[key]}
+                        onChange={(e) => handleChange("projects", key, e.target.value, idx)}
+                      />
+                    ) : (
+                      <input
+                        className="form-control"
+                        placeholder={key}
+                        value={proj[key]}
+                        onChange={(e) => handleChange("projects", key, e.target.value, idx)}
+                      />
+                    )}
+                  </div>
+                ))}
+                <div className="col-12">
+                  <button className="btn btn-outline-danger" onClick={() => removeEntry("projects", idx)}>Remove</button>
                 </div>
               </div>
             ))}
-            <button
-              className="btn btn-outline-primary"
-              onClick={() =>
-                addEntry("projects", { title: "", description: "", link: "" })
-              }
-            >
-              + Add Project
-            </button>
+            <button className="btn btn-outline-primary" onClick={() => addEntry("projects", { title: "", description: "", link: "" })}>+ Add Project</button>
           </div>
         )}
 
-        {/* STEP 5–13 (skills, certifications, etc.) */}
+        {/* STEP 5–13: Array Text Sections */}
         {[
           "technicalSkills",
           "certifications",
@@ -546,62 +348,45 @@ const ResumeBuilder = () => {
         ].map((field, idx) =>
           currentStep === idx + 5 ? (
             <div key={field}>
-        {currentStep === 5 && (
-          <textarea
-          className="form-control"
-          rows={5}
-          placeholder="Enter one skill per line"
-          value={form.technicalSkills.join("\n")}
-          onChange={(e) =>
-          setForm({
-          ...form,
-          technicalSkills: e.target.value
-          .split(".")
-          .map((s) => s.trim())
-          .filter((s) => s !== ""),
-         })
-        }
-          />
-            )}
-
-              <button
-                className="btn btn-outline-primary"
-                onClick={() => addEntry(field, "")}
-              >
-                + Add More
-              </button>
+              {form[field].map((item, i) => (
+                <div className="d-flex mb-2" key={i}>
+                  <input
+                    className="form-control me-2"
+                    value={item}
+                    placeholder={field}
+                    onChange={(e) => handleChange(field, null, e.target.value, i)}
+                  />
+                  <button className="btn btn-outline-danger" onClick={() => removeEntry(field, i)}>Remove</button>
+                </div>
+              ))}
+              <button className="btn btn-outline-primary" onClick={() => addEntry(field, "")}>+ Add {field}</button>
             </div>
           ) : null
         )}
 
-        {/* STEP 14: Job Preferences */}
+        {/* STEP 14–16: Text Areas */}
         {currentStep === 14 && (
           <textarea
             className="form-control"
+            rows={4}
             placeholder="Job Preferences"
             value={form.jobPreferences}
-            onChange={(e) =>
-              handleChange("jobPreferences", null, e.target.value)
-            }
+            onChange={(e) => handleChange("jobPreferences", null, e.target.value)}
           />
         )}
-
-        {/* STEP 15: Family Background */}
         {currentStep === 15 && (
           <textarea
             className="form-control"
+            rows={4}
             placeholder="Family Background"
             value={form.familyBackground}
-            onChange={(e) =>
-              handleChange("familyBackground", null, e.target.value)
-            }
+            onChange={(e) => handleChange("familyBackground", null, e.target.value)}
           />
         )}
-
-        {/* STEP 16: Declaration */}
         {currentStep === 16 && (
           <textarea
             className="form-control"
+            rows={4}
             placeholder="Declaration"
             value={form.declaration}
             onChange={(e) => handleChange("declaration", null, e.target.value)}
@@ -609,37 +394,20 @@ const ResumeBuilder = () => {
         )}
       </div>
 
-      {/* Navigation Buttons */}
+      {/* Navigation */}
       <div className="d-flex justify-content-between mt-4">
-        {currentStep > 0 && (
-          <button className="btn btn-secondary" onClick={prevStep}>
-            Back
-          </button>
-        )}
-
+        {currentStep > 0 && <button className="btn btn-secondary" onClick={prevStep}>Back</button>}
         {currentStep < sections.length - 1 ? (
           <div>
-            <button className="btn btn-primary me-2" onClick={nextStep}>
-              Next
-            </button>
-            <button className="btn btn-outline-primary" onClick={skipStep}>
-              Skip
-            </button>
+            <button className="btn btn-primary me-2" onClick={nextStep}>Next</button>
+            <button className="btn btn-outline-primary" onClick={skipStep}>Skip</button>
           </div>
         ) : (
-          <button
-            className="btn btn-success"
-            onClick={() => {
-              console.log("Resume Data Saved ✅", form);
-              alert("Resume saved successfully!");
-            }}
-          >
-            Save Resume
-          </button>
+          <button className="btn btn-success" onClick={saveResume}>Save Resume</button>
         )}
       </div>
 
-      {/* Live Preview Section */}
+      {/* Live Preview */}
       {showPreview && (
         <div className="mt-4 border p-3 bg-light rounded">
           <h4 className="text-center">Live Resume Preview</h4>

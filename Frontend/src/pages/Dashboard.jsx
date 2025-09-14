@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import resumeImg from "../assets/resumehome.avif"; 
 import altImg from "../assets/qwer.png"; // second image
 import trustpilotLogo from "../assets/trustpilot.svg";
-import { FaCommentDots } from "react-icons/fa";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -11,14 +10,10 @@ const Dashboard = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setFlipped(prev => !prev);
-    }, 4000); 
+      setFlipped((prev) => !prev);
+    }, 4000);
     return () => clearInterval(interval);
   }, [flipped]);
-
-  const handleChatClick = () => {
-    navigate("/ai-chat"); // AI chat route
-  };
 
   return (
     <div className="d-flex flex-column align-items-center mt-4 position-relative">
@@ -55,7 +50,10 @@ const Dashboard = () => {
               templates, and expert tips to get hired faster.
             </p>
             <div className="d-flex flex-column flex-lg-row gap-3">
-              <button className="btn btn-outline-light btn-lg px-4 py-2 rounded-pill">
+              <button
+                className="btn btn-outline-light btn-lg px-4 py-2 rounded-pill"
+                onClick={() => navigate("/ats-checker")}
+              >
                 Import Existing Resume
               </button>
               <button
@@ -92,36 +90,17 @@ const Dashboard = () => {
 
       {/* Promotional Line Below Card */}
       <div className="text-center mt-4">
-        <h4 style={{ fontFamily: "Consolas, sans-serif", fontWeight: "600", fontSize: "20px", color: "#1d1c1cff" }}>
+        <h4
+          style={{
+            fontFamily: "Consolas, sans-serif",
+            fontWeight: "600",
+            fontSize: "20px",
+            color: "#1d1c1cff",
+          }}
+        >
           Pick a resume template and build your resume in minutes! <br />
           Get an ATS-friendly, AI-assisted resume.
         </h4>
-      </div>
-
-      {/* Floating Chat Icon with Text */}
-      <div
-        onClick={handleChatClick}
-        style={{
-          position: "fixed",
-          bottom: "30px",
-          right: "30px",
-          backgroundColor: "#ffc107",
-          color: "#000",
-          padding: "12px 20px",
-          borderRadius: "50px",
-          display: "flex",
-          alignItems: "center",
-          gap: "10px",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
-          cursor: "pointer",
-          zIndex: 1000,
-          fontWeight: "bold",
-          fontSize: "14px",
-        }}
-        title="Chat with us"
-      >
-        <FaCommentDots size={20} />
-        <span>Chat with us</span>
       </div>
     </div>
   );
