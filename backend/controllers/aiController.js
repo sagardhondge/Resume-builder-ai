@@ -1,25 +1,52 @@
-import { HfInference } from "@huggingface/inference";
+import axios from "axios";
 
-const client = new HfInference(process.env.HUGGINGFACE_API_KEY);
-
-// Example: Generate Career Objective
-export const generateCareerObjective = async (req, res) => {
+export const getAtsScore = async (req, res) => {
   try {
-    const { jobRole } = req.body;
+    const { resumeText, jobRole } = req.body;
 
-    if (!jobRole) {
-      return res.status(400).json({ error: "Job role is required" });
-    }
+    // Example prompt for ATS scoring
+    const prompt = `
+You are an ATS (Applicant Tracking System) expert.
+Analyze the resume text for the role: ${jobRole}.
+Give:
+1. ATS Score out of 100
+2. Missing important keywords
+3. Suggestions to improve
+Resume:
+${resumeText}
+    `;
 
-    const response = await client.textGeneration({
-      model: "google/flan-t5-base", // free model
-      inputs: `Write a professional resume career objective for a ${jobRole}`,
-      parameters: { max_new_tokens: 120 },
-    });
+    const response = await axios.post(
+      "https://api-inference.huggingface.co/models/gpt2", // (or other free model)
+      { inputs: prompt },
+      { headers: { Authorization: `Bearer ${process.env.HF_API_KEY}` } }
+    );
 
-    res.json({ objective: response.generated_text });
+    res.json({ result: response.data });
   } catch (error) {
-    console.error("AI Error:", error.message);
-    res.status(500).json({ error: "AI generation failed" });
+    console.error(error);
+    res.status(500).json({ message: "AI ATS scoring failed" });
+  }
+};
+
+export const getSuggestions = async (req, res) => {
+  try {
+    const { jobRole, section } = req.body;
+
+    const prompt = `
+Suggest strong ATS-friendly ${section} for a resume applying to the role of ${jobRole}.
+Make sure to include industry keywords.
+    `;
+
+    const response = await axios.post(
+      "https://api-inference.huggingface.co/models/gpt2",
+      { inputs: prompt },
+      { headers: { Authorization: `Bearer ${process.env.HF_API_KEY}` } }
+    );
+
+    res.json({ result: response.data });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "AI suggestion failed" });
   }
 };
