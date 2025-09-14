@@ -5,18 +5,17 @@ import {
   getResumeById,
   updateResume,
   deleteResume,
+  downloadResume
 } from "../controllers/resumeController.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
-router.get("/download/:id", authMiddleware, downloadResume);
 
 const router = express.Router();
 
-// Resume CRUD routes
 router.post("/", authMiddleware, createResume);
 router.get("/", authMiddleware, getResumes);
 router.get("/:id", authMiddleware, getResumeById);
 router.put("/:id", authMiddleware, updateResume);
 router.delete("/:id", authMiddleware, deleteResume);
-
+router.get("/download/:id", authMiddleware, downloadResume);
 
 export default router;

@@ -1,11 +1,15 @@
+// server.js
 import dotenv from "dotenv";
 dotenv.config(); // Must be first
 
 import express from "express";
 import cors from "cors";
 import connectDB from "./config/db.js";
-import aiRoutes from "./routes/aiRoutes.js";
 
+// Routes
+import aiRoutes from "./routes/aiRoutes.js";
+import resumeRoutes from "./routes/resumeRoute.js";
+import authRoutes from "./routes/authRoutes.js";
 const app = express();
 
 // Connect to MongoDB
@@ -20,9 +24,10 @@ app.get("/", (req, res) => {
   res.json({ message: "Server is working 🚀" });
 });
 
-// AI Routes
+// API Routes
 app.use("/api/ai", aiRoutes);
-
+app.use("/api/resumes", resumeRoutes);
+app.use("/api/auth", authRoutes);
 // 404 Handler
 app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });

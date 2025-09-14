@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useReactToPrint } from "react-to-print";
 import Templates from "../components/Templates";
-
- const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+import API from "../utils/axios.js";
 
 const sections = [
   "Basic Info",
@@ -68,28 +67,20 @@ const ResumeBuilder = () => {
 
   const resumeRef = useRef();
 
-  // Load resume from backend
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
-
-    fetch(`${API_URL}/api/resumes`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((res) => res.json())
-      .then((resumes) => {
-        if (resumes && resumes.length > 0) {
-          setForm(resumes[0]);
-          setResumeId(resumes[0]._id);
+    API.get("/resumes")
+      .then((res) => {
+        if (res.data && res.data.length > 0) {
+          setForm(res.data[0]);
+          setResumeId(res.data[0]._id);
         } else {
           const savedData = localStorage.getItem("resumeData");
           if (savedData) setShowRestorePrompt(true);
         }
       })
-      .catch(console.error);
+      .catch((err) => console.error("Error fetching resume:", err));
   }, []);
 
-  // Auto-save locally
   useEffect(() => {
     if (form) localStorage.setItem("resumeData", JSON.stringify(form));
   }, [form]);
@@ -109,13 +100,15 @@ const ResumeBuilder = () => {
   const handleChange = (section, field, value, index = null) => {
     if (Array.isArray(form[section])) {
       const updatedArray = [...form[section]];
-      if (typeof updatedArray[index] === "object" && field) {
-        updatedArray[index] = { ...updatedArray[index], [field]: value };
-      } else {
-        updatedArray[index] = value;
+      if (index !== null) {
+        if (field && typeof updatedArray[index] === "object") {
+          updatedArray[index] = { ...updatedArray[index], [field]: value };
+        } else {
+          updatedArray[index] = value;
+        }
+        setForm({ ...form, [section]: updatedArray });
       }
-      setForm({ ...form, [section]: updatedArray });
-    } else if (typeof form[section] === "object") {
+    } else if (typeof form[section] === "object" && field) {
       setForm({ ...form, [section]: { ...form[section], [field]: value } });
     } else {
       setForm({ ...form, [section]: value });
@@ -123,56 +116,57 @@ const ResumeBuilder = () => {
   };
 
   const addEntry = (section, emptyEntry) => {
-    setForm({ ...form, [section]: [...form[section], emptyEntry] });
+    if (Array.isArray(form[section])) {
+      setForm({ ...form, [section]: [...form[section], emptyEntry] });
+    }
   };
 
   const removeEntry = (section, index) => {
-    const updated = [...form[section]];
-    updated.splice(index, 1);
-    setForm({ ...form, [section]: updated });
+    if (Array.isArray(form[section])) {
+      const updated = [...form[section]];
+      updated.splice(index, 1);
+      setForm({ ...form, [section]: updated });
+    }
   };
 
   const handlePrint = useReactToPrint({
     content: () => resumeRef.current,
   });
 
-  const handleDownload = () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      alert("⚠️ Please login to download your resume.");
-      return;
-    }
-    handlePrint();
-  };
+const handleDownload = async () => {
+  if (!resumeId) {
+    alert("⚠️ Please save your resume first to download.");
+    return;
+  }
+
+  try {
+    const res = await API.get(`/resumes/download/${resumeId}`, {
+      responseType: "blob", // Important for PDF
+    });
+
+    // Create a blob and trigger download
+    const url = window.URL.createObjectURL(new Blob([res.data]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `Resume.pdf`);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  } catch (err) {
+    console.error("Error downloading resume:", err);
+    alert("❌ Error downloading resume");
+  }
+};
 
   const saveResume = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      alert("⚠️ Please login to save your resume.");
-      return;
-    }
-
     try {
-      const method = resumeId ? "PUT" : "POST";
-      const url = resumeId
-        ? `${API_URL}/api/resumes/${resumeId}`
-        : `${API_URL}/api/resumes`;
-
-      const res = await fetch(url, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(form),
-      });
-
-      if (!res.ok) throw new Error("Failed to save resume");
-      const data = await res.json();
-      setResumeId(data._id);
+      const res = resumeId
+        ? await API.put(`/resumes/${resumeId}`, form)
+        : await API.post("/resumes", form);
+      setResumeId(res.data._id);
       alert("✅ Resume saved successfully!");
     } catch (err) {
-      console.error(err);
+      console.error("Error saving resume:", err);
       alert("❌ Error saving resume");
     }
   };
@@ -199,18 +193,45 @@ const ResumeBuilder = () => {
         </div>
       )}
 
-      <div className="d-flex justify-content-between mb-4 gap-2">
-        <button className="btn btn-info" onClick={() => setShowPreview(true)}>
-          Preview Resume
-        </button>
-        <button className="btn btn-success" onClick={handleDownload}>
-          Download Resume
-        </button>
-      </div>
+<div className="d-flex justify-content-between mb-4 gap-2">
+  <button
+    className="btn btn-primary"
+    onClick={() => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("⚠️ Please login to save your resume!");
+        return;
+      }
+      saveResume();
+    }}
+  >
+     Save Resume
+  </button>
 
+  <button
+    className="btn btn-info"
+    onClick={() => setShowPreview(true)}
+  >
+    Preview Resume
+  </button>
+
+  <button
+    className="btn btn-success"
+    onClick={() => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("⚠️ Please login to download your resume!");
+        return;
+      }
+      handleDownload();
+    }}
+  >
+    Download Resume
+  </button>
+</div>
       <h2 className="text-center mb-4">{sections[currentStep]}</h2>
       <div className="card shadow-sm p-4">
-        {/* ================= STEP 0: Basic Info ================= */}
+        {/* Render all steps safely */}
         {currentStep === 0 && (
           <div className="row g-3">
             {Object.keys(form.basicInfo).map((field) => (
@@ -235,7 +256,6 @@ const ResumeBuilder = () => {
           </div>
         )}
 
-        {/* STEP 1: Career Objective */}
         {currentStep === 1 && (
           <textarea
             className="form-control"
@@ -246,107 +266,45 @@ const ResumeBuilder = () => {
           />
         )}
 
-        {/* STEP 2–4: Education, Internships, Projects */}
-        {currentStep === 2 && (
-          <div>
-            {form.education.map((edu, idx) => (
-              <div className="row g-3 mb-3" key={idx}>
-                {Object.keys(edu).map((key) => (
-                  <div className="col-md-3" key={key}>
-                    <input
-                      className="form-control"
-                      placeholder={key}
-                      value={edu[key]}
-                      onChange={(e) => handleChange("education", key, e.target.value, idx)}
-                    />
-                  </div>
-                ))}
-                <div className="col-12">
-                  <button className="btn btn-outline-danger" onClick={() => removeEntry("education", idx)}>Remove</button>
-                </div>
-              </div>
-            ))}
-            <button className="btn btn-outline-primary" onClick={() => addEntry("education", { degree: "", institution: "", year: "", grade: "" })}>+ Add Education</button>
-          </div>
-        )}
-
-        {currentStep === 3 && (
-          <div>
-            {form.internships.map((intern, idx) => (
-              <div className="row g-3 mb-3" key={idx}>
-                {Object.keys(intern).map((key) => (
-                  <div className={key === "description" ? "col-12" : "col-md-4"} key={key}>
+        {/* Steps 2–4 */}
+        {[{ section: "education", empty: { degree: "", institution: "", year: "", grade: "" } },
+          { section: "internships", empty: { company: "", role: "", duration: "", description: "" } },
+          { section: "projects", empty: { title: "", description: "", link: "" } }
+        ].map((obj, idx) => currentStep === idx + 2 && (
+          <div key={obj.section}>
+            {Array.isArray(form[obj.section]) && form[obj.section].map((item, i) => (
+              <div className="row g-3 mb-3" key={i}>
+                {Object.keys(item).map((key) => (
+                  <div className={key === "description" ? "col-12" : key === "link" ? "col-md-3" : "col-md-4"} key={key}>
                     {key === "description" ? (
                       <textarea
                         className="form-control"
                         placeholder={key}
-                        value={intern[key]}
-                        onChange={(e) => handleChange("internships", key, e.target.value, idx)}
+                        value={item[key]}
+                        onChange={(e) => handleChange(obj.section, key, e.target.value, i)}
                       />
                     ) : (
                       <input
                         className="form-control"
                         placeholder={key}
-                        value={intern[key]}
-                        onChange={(e) => handleChange("internships", key, e.target.value, idx)}
+                        value={item[key]}
+                        onChange={(e) => handleChange(obj.section, key, e.target.value, i)}
                       />
                     )}
                   </div>
                 ))}
                 <div className="col-12">
-                  <button className="btn btn-outline-danger" onClick={() => removeEntry("internships", idx)}>Remove</button>
+                  <button className="btn btn-outline-danger" onClick={() => removeEntry(obj.section, i)}>Remove</button>
                 </div>
               </div>
             ))}
-            <button className="btn btn-outline-primary" onClick={() => addEntry("internships", { company: "", role: "", duration: "", description: "" })}>+ Add Internship</button>
+            <button className="btn btn-outline-primary" onClick={() => addEntry(obj.section, obj.empty)}>+ Add {obj.section}</button>
           </div>
-        )}
+        ))}
 
-        {currentStep === 4 && (
-          <div>
-            {form.projects.map((proj, idx) => (
-              <div className="row g-3 mb-3" key={idx}>
-                {Object.keys(proj).map((key) => (
-                  <div className={key === "description" ? "col-md-5" : key === "link" ? "col-md-3" : "col-md-4"} key={key}>
-                    {key === "description" ? (
-                      <textarea
-                        className="form-control"
-                        placeholder={key}
-                        value={proj[key]}
-                        onChange={(e) => handleChange("projects", key, e.target.value, idx)}
-                      />
-                    ) : (
-                      <input
-                        className="form-control"
-                        placeholder={key}
-                        value={proj[key]}
-                        onChange={(e) => handleChange("projects", key, e.target.value, idx)}
-                      />
-                    )}
-                  </div>
-                ))}
-                <div className="col-12">
-                  <button className="btn btn-outline-danger" onClick={() => removeEntry("projects", idx)}>Remove</button>
-                </div>
-              </div>
-            ))}
-            <button className="btn btn-outline-primary" onClick={() => addEntry("projects", { title: "", description: "", link: "" })}>+ Add Project</button>
-          </div>
-        )}
-
-        {/* STEP 5–13: Array Text Sections */}
-        {[
-          "technicalSkills",
-          "certifications",
-          "achievements",
-          "coCurricular",
-          "extraCurricular",
-          "languages",
-          "strengths",
-          "hobbies",
-          "areaOfInterest",
-        ].map((field, idx) =>
-          currentStep === idx + 5 ? (
+        {/* Steps 5–13 */}
+        {["technicalSkills","certifications","achievements","coCurricular","extraCurricular","languages","strengths","hobbies","areaOfInterest"].map((field, idx) =>
+          currentStep === idx + 5 && Array.isArray(form[field]) && (
             <div key={field}>
               {form[field].map((item, i) => (
                 <div className="d-flex mb-2" key={i}>
@@ -361,40 +319,15 @@ const ResumeBuilder = () => {
               ))}
               <button className="btn btn-outline-primary" onClick={() => addEntry(field, "")}>+ Add {field}</button>
             </div>
-          ) : null
+          )
         )}
 
-        {/* STEP 14–16: Text Areas */}
-        {currentStep === 14 && (
-          <textarea
-            className="form-control"
-            rows={4}
-            placeholder="Job Preferences"
-            value={form.jobPreferences}
-            onChange={(e) => handleChange("jobPreferences", null, e.target.value)}
-          />
-        )}
-        {currentStep === 15 && (
-          <textarea
-            className="form-control"
-            rows={4}
-            placeholder="Family Background"
-            value={form.familyBackground}
-            onChange={(e) => handleChange("familyBackground", null, e.target.value)}
-          />
-        )}
-        {currentStep === 16 && (
-          <textarea
-            className="form-control"
-            rows={4}
-            placeholder="Declaration"
-            value={form.declaration}
-            onChange={(e) => handleChange("declaration", null, e.target.value)}
-          />
-        )}
+        {/* Steps 14–16 */}
+        {currentStep === 14 && <textarea className="form-control" rows={4} placeholder="Job Preferences" value={form.jobPreferences} onChange={(e) => handleChange("jobPreferences", null, e.target.value)} />}
+        {currentStep === 15 && <textarea className="form-control" rows={4} placeholder="Family Background" value={form.familyBackground} onChange={(e) => handleChange("familyBackground", null, e.target.value)} />}
+        {currentStep === 16 && <textarea className="form-control" rows={4} placeholder="Declaration" value={form.declaration} onChange={(e) => handleChange("declaration", null, e.target.value)} />}
       </div>
 
-      {/* Navigation */}
       <div className="d-flex justify-content-between mt-4">
         {currentStep > 0 && <button className="btn btn-secondary" onClick={prevStep}>Back</button>}
         {currentStep < sections.length - 1 ? (
@@ -407,7 +340,6 @@ const ResumeBuilder = () => {
         )}
       </div>
 
-      {/* Live Preview */}
       {showPreview && (
         <div className="mt-4 border p-3 bg-light rounded">
           <h4 className="text-center">Live Resume Preview</h4>
