@@ -9,11 +9,10 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [flipped, setFlipped] = useState(false);
 
-  // Flip image every 1 second
   useEffect(() => {
     const interval = setInterval(() => {
       setFlipped(prev => !prev);
-    }, 3000); 
+    }, 4000); 
     return () => clearInterval(interval);
   }, [flipped]);
 
