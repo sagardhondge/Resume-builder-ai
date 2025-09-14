@@ -3,7 +3,6 @@ import React, { useState, useRef } from "react";
 import ClassicTemplate from "./templates/ClassicTemplate";
 import ModernTemplate from "./templates/ModernTemplate";
 import MinimalTemplate from "./templates/MinimalTemplate";
-import ProfessionalTemplate from "./templates/ProfessionalTemplate";
 import CreativeTemplate from "./templates/CreativeTemplate";
 import ExecutiveTemplate from "./templates/ExecutiveTemplate";
 import ModernMinimalTemplate from "./templates/ModernMinimalTemplate";
@@ -63,7 +62,6 @@ const Templates = ({ data }) => {
     classic: ClassicTemplate,
     modern: ModernTemplate,
     minimal: MinimalTemplate,
-    professional: ProfessionalTemplate,
     creative: CreativeTemplate,
     executive: ExecutiveTemplate,
     modernminimal: ModernMinimalTemplate,

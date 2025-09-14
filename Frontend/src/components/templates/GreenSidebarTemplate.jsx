@@ -46,7 +46,7 @@ const GreenSidebarTemplate = ({ data = {} }) => {
       }}
     >
       {/* Sidebar */}
-      <div style={{ width: "30%", background: "#506751ff", color: "white", padding: "20px" }}>
+      <div style={{ width: "30%", background: "#213922ff", color: "white", padding: "20px" }}>
         {fullName && <h2>{fullName}</h2>}
 
         {(basicInfo.email || basicInfo.phone || basicInfo.currentAddress || basicInfo.dob) && (
@@ -105,6 +105,19 @@ const GreenSidebarTemplate = ({ data = {} }) => {
           <>
             <h3>Hobbies</h3>
             <ul>{renderList(hobbies)}</ul>
+          </>
+        )}
+                {areaOfInterest.length > 0 && renderList(areaOfInterest).length > 0 && (
+          <>
+            <h2>Areas of Interest</h2>
+            <ul>{renderList(areaOfInterest)}</ul>
+          </>
+        )}
+
+        {jobPreferences && jobPreferences.trim() !== "" && (
+          <>
+            <h2>Job Preferences</h2>
+            <p>{jobPreferences}</p>
           </>
         )}
       </div>
@@ -205,19 +218,7 @@ const GreenSidebarTemplate = ({ data = {} }) => {
           </>
         )}
 
-        {areaOfInterest.length > 0 && renderList(areaOfInterest).length > 0 && (
-          <>
-            <h2>Areas of Interest</h2>
-            <ul>{renderList(areaOfInterest)}</ul>
-          </>
-        )}
 
-        {jobPreferences && jobPreferences.trim() !== "" && (
-          <>
-            <h2>Job Preferences</h2>
-            <p>{jobPreferences}</p>
-          </>
-        )}
 
         {familyBackground && familyBackground.trim() !== "" && (
           <>

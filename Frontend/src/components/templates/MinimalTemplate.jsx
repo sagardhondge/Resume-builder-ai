@@ -59,9 +59,28 @@ const MinimalTemplate = React.forwardRef(({ data = {} }, ref) => {
             {basicInfo.phone && <>📞 {basicInfo.phone} | </>}
             {basicInfo.currentAddress && <>📍 {basicInfo.currentAddress}</>}
             {basicInfo.dob && <> | DOB: {basicInfo.dob}</>}
-            {basicInfo.github && <> | GitHub: {basicInfo.github}</>}
-            {basicInfo.linkedin && <> | LinkedIn: {basicInfo.linkedin}</>}
-            {basicInfo.portfolio && <> | Portfolio: {basicInfo.portfolio}</>}
+            <br />
+              {basicInfo.github && (
+                <>
+                  <a href={basicInfo.github} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:text-blue-900 mr-1">
+                    GitHub
+                  </a>
+                  |{" "}
+                </>
+              )}
+              {basicInfo.linkedin && (
+                <>
+                  <a href={basicInfo.linkedin} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:text-blue-900 mr-1">
+                    LinkedIn
+                  </a>
+                  |{" "}
+                </>
+              )}
+              {basicInfo.portfolio && (
+                <a href={basicInfo.portfolio} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:text-blue-900 mr-1">
+                  Portfolio
+                </a>
+              )}
           </p>
           <hr style={{ marginTop: "15px", border: "0.5px solid #ccc" }} />
         </div>
@@ -118,6 +137,21 @@ const MinimalTemplate = React.forwardRef(({ data = {} }, ref) => {
               <ul style={{ paddingLeft: "15px" }}>
                 {areaOfInterest.map((a, i) => a && <li key={i}>{a}</li>)}
               </ul>
+            </section>
+          )}
+                    {/* Job Preferences */}
+          {jobPreferences && (
+            <section style={{ marginBottom: "20px" }}>
+              <h3 style={{ fontSize: "16px", borderBottom: "1px solid #ddd" }}>Job Preferences</h3>
+              <p>{jobPreferences}</p>
+            </section>
+          )}
+
+          {/* Family Background */}
+          {familyBackground && (
+            <section style={{ marginBottom: "20px" }}>
+              <h3 style={{ fontSize: "16px", borderBottom: "1px solid #ddd" }}>Family Background</h3>
+              <p>{familyBackground}</p>
             </section>
           )}
         </div>
@@ -228,23 +262,6 @@ const MinimalTemplate = React.forwardRef(({ data = {} }, ref) => {
               </ul>
             </section>
           )}
-
-          {/* Job Preferences */}
-          {jobPreferences && (
-            <section style={{ marginBottom: "20px" }}>
-              <h3 style={{ fontSize: "16px", borderBottom: "1px solid #ddd" }}>Job Preferences</h3>
-              <p>{jobPreferences}</p>
-            </section>
-          )}
-
-          {/* Family Background */}
-          {familyBackground && (
-            <section style={{ marginBottom: "20px" }}>
-              <h3 style={{ fontSize: "16px", borderBottom: "1px solid #ddd" }}>Family Background</h3>
-              <p>{familyBackground}</p>
-            </section>
-          )}
-
           {/* Declaration */}
           {declaration && (
             <section style={{ marginTop: "25px" }}>
