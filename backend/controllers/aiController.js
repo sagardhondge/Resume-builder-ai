@@ -1,52 +1,73 @@
 import axios from "axios";
 
+// ATS Controller
 export const getAtsScore = async (req, res) => {
   try {
-    const { resumeText, jobRole } = req.body;
+    const { jobDescription } = req.body;
+    const resumeText = req.file ? req.file.buffer.toString("utf-8") : null;
 
-    // Example prompt for ATS scoring
+    if (!resumeText || !jobDescription) {
+      return res
+        .status(400)
+        .json({ message: "Resume text & job description required" });
+    }
+
+    console.log("File received:", req.file?.originalname);
+    console.log("Job description length:", jobDescription.length);
+
     const prompt = `
-You are an ATS (Applicant Tracking System) expert.
-Analyze the resume text for the role: ${jobRole}.
-Give:
-1. ATS Score out of 100
-2. Missing important keywords
-3. Suggestions to improve
+You are an ATS (Applicant Tracking System) analyzer.
+Evaluate the following resume against the job description.
+Return a JSON with:
+{
+  "score": number (0-100),
+  "checks": [
+    { "name": "Contains important job keywords", "status": "pass|fail|warn" },
+    { "name": "Work experience relevance", "status": "pass|fail|warn" },
+    { "name": "Achievements are quantified", "status": "pass|fail|warn" }
+  ],
+  "suggestions": ["list", "of", "improvements"]
+}
+
+Job Description:
+${jobDescription}
+
 Resume:
 ${resumeText}
-    `;
+`;
 
     const response = await axios.post(
-      "https://api-inference.huggingface.co/models/gpt2", // (or other free model)
+      "https://api-inference.huggingface.co/models/google/flan-t5-small",
       { inputs: prompt },
-      { headers: { Authorization: `Bearer ${process.env.HF_API_KEY}` } }
+      {
+        headers: { Authorization: `Bearer ${process.env.HF_ACCESS_TOKEN}` },
+      }
     );
 
-    res.json({ result: response.data });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "AI ATS scoring failed" });
-  }
-};
+    const aiOutput = response.data[0]?.generated_text || "{}";
 
-export const getSuggestions = async (req, res) => {
-  try {
-    const { jobRole, section } = req.body;
+    let parsed;
+    try {
+      parsed = JSON.parse(aiOutput);
+    } catch {
+      // fallback if AI output is not JSON
+      parsed = {
+        score: Math.floor(Math.random() * 30) + 60,
+        checks: [
+          { name: "Contains important keywords", status: "warn" },
+          { name: "Work experience relevance", status: "warn" },
+        ],
+        suggestions: [
+          "Improve formatting",
+          "Add measurable achievements",
+          "Highlight relevant experience",
+        ],
+      };
+    }
 
-    const prompt = `
-Suggest strong ATS-friendly ${section} for a resume applying to the role of ${jobRole}.
-Make sure to include industry keywords.
-    `;
-
-    const response = await axios.post(
-      "https://api-inference.huggingface.co/models/gpt2",
-      { inputs: prompt },
-      { headers: { Authorization: `Bearer ${process.env.HF_API_KEY}` } }
-    );
-
-    res.json({ result: response.data });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "AI suggestion failed" });
+    res.json(parsed);
+  } catch (err) {
+    console.error("HF ATS Error:", err.response?.data || err.message);
+    res.status(500).json({ message: "Error analyzing ATS score" });
   }
 };

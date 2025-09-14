@@ -1,12 +1,10 @@
 import express from "express";
-import { getAtsScore, getSuggestions } from "../controllers/aiController.js";
+import multer from "multer";
+import { getAtsScore } from "../controllers/aiController.js";
 
 const router = express.Router();
+const upload = multer(); // in-memory storage
 
-// POST /api/ai/ats-score
-router.post("/ats-score", getAtsScore);
-
-// POST /api/ai/suggestions
-router.post("/suggestions", getSuggestions);
+router.post("/ats-score", upload.single("resume"), getAtsScore);
 
 export default router;

@@ -1,0 +1,39 @@
+.skeleton-score {
+  height: 40px;
+  width: 120px;
+  margin: 0 auto 20px auto;
+  background: #e0e0e0;
+  border-radius: 8px;
+  animation: pulse 1.2s infinite;
+}
+
+.skeleton-progress {
+  height: 25px;
+  width: 100%;
+  background: #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  animation: pulse 1.2s infinite;
+}
+
+.skeleton-checks div,
+.skeleton-suggestions div {
+  height: 18px;
+  width: 80%;
+  background: #e0e0e0;
+  border-radius: 6px;
+  margin: 10px auto;
+  animation: pulse 1.2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
+}
