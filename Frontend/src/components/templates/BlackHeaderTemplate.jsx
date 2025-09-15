@@ -113,6 +113,14 @@ const BlackHeaderTemplate = ({ data = {} }) => {
 
       {/* ===== Content ===== */}
       <div style={{ padding: "20px" }}>
+                {/* Job Preferences */}
+        {jobPreferences && jobPreferences.trim() !== "" && (
+          <>
+            <h2>Job Preferences</h2>
+            <p>{jobPreferences}</p>
+            <hr />
+          </>
+        )}
         {/* Career Objective */}
         {careerObjective && careerObjective.trim() !== "" && (
           <>
@@ -248,16 +256,6 @@ const BlackHeaderTemplate = ({ data = {} }) => {
             <hr />
           </>
         )}
-
-        {/* Job Preferences */}
-        {jobPreferences && jobPreferences.trim() !== "" && (
-          <>
-            <h2>Job Preferences</h2>
-            <p>{jobPreferences}</p>
-            <hr />
-          </>
-        )}
-
         {/* Family Background */}
         {familyBackground && familyBackground.trim() !== "" && (
           <>

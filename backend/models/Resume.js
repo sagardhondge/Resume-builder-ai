@@ -17,6 +17,7 @@ const resumeSchema = new mongoose.Schema({
     github: String,
     portfolio: String,
   },
+   jobPreferences: { type: String, default: "" },
   careerObjective: { type: String, default: "" },
   education: [
     { degree: String, institution: String, year: String, grade: String }
@@ -36,7 +37,6 @@ const resumeSchema = new mongoose.Schema({
   strengths: [String],
   hobbies: [String],
   areaOfInterest: [String],
-  jobPreferences: { type: String, default: "" },
   familyBackground: { type: String, default: "" },
   declaration: { type: String, default: "" },
 }, { timestamps: true });

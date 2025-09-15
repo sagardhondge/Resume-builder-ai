@@ -99,6 +99,15 @@ const BlueHeaderTemplate = ({ data = {} }) => {
 
       {/* ===== Content ===== */}
       <div style={{ padding: "20px" }}>
+                {/* Job Preferences */}
+        {jobPreferences && jobPreferences.trim() !== "" && (
+          <>
+            <h3>Job Preferences</h3>
+            <p>{jobPreferences}</p>
+            <hr />
+          </>
+        )}
+
         {/* Career Objective */}
         {careerObjective && careerObjective.trim() !== "" && (
           <>
@@ -227,16 +236,6 @@ const BlueHeaderTemplate = ({ data = {} }) => {
             <hr />
           </>
         )}
-
-        {/* Job Preferences */}
-        {jobPreferences && jobPreferences.trim() !== "" && (
-          <>
-            <h3>Job Preferences</h3>
-            <p>{jobPreferences}</p>
-            <hr />
-          </>
-        )}
-
         {/* Family Background */}
         {familyBackground && familyBackground.trim() !== "" && (
           <>

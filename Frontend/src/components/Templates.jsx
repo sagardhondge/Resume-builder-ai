@@ -28,6 +28,7 @@ const Templates = ({ data }) => {
       linkedin: "https://linkedin.com/in/johndoe",
       portfolio: "https://johndoe.com",
     },
+    jobPreferences: "Full-time Software Developer role",
     careerObjective:
       "To work in a dynamic organization where I can contribute my skills and grow professionally.",
     education: [
@@ -52,7 +53,6 @@ const Templates = ({ data }) => {
     declaration:
       "I hereby declare that the above information is true to the best of my knowledge.",
     areaOfInterest: ["AI", "Web Development"],
-    jobPreferences: "Full-time Software Developer role",
     familyBackground: "Father: John Sr., Mother: Jane Doe",
   };
 

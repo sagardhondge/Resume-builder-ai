@@ -141,10 +141,9 @@ const handleDownload = async () => {
 
   try {
     const res = await API.get(`/resumes/download/${resumeId}`, {
-      responseType: "blob", // Important for PDF
+      responseType: "blob",
     });
 
-    // Create a blob and trigger download
     const url = window.URL.createObjectURL(new Blob([res.data]));
     const link = document.createElement("a");
     link.href = url;
@@ -153,23 +152,33 @@ const handleDownload = async () => {
     link.click();
     link.remove();
   } catch (err) {
-    console.error("Error downloading resume:", err);
-    alert("❌ Error downloading resume");
+    if (err.response && err.response.status === 401) {
+      alert("⚠️ Please login to download your resume!");
+    } else {
+      console.error("Error downloading resume:", err);
+      alert("❌ Error downloading resume");
+    }
   }
 };
 
-  const saveResume = async () => {
-    try {
-      const res = resumeId
-        ? await API.put(`/resumes/${resumeId}`, form)
-        : await API.post("/resumes", form);
-      setResumeId(res.data._id);
-      alert("✅ Resume saved successfully!");
-    } catch (err) {
+const saveResume = async () => {
+  try {
+    const res = resumeId
+      ? await API.put(`/resumes/${resumeId}`, form)
+      : await API.post("/resumes", form);
+
+    setResumeId(res.data._id);
+    alert("✅ Resume saved successfully!");
+  } catch (err) {
+    if (err.response && err.response.status === 401) {
+      alert("⚠️ Please login to save your resume!");
+    } else {
       console.error("Error saving resume:", err);
       alert("❌ Error saving resume");
     }
-  };
+  }
+};
+
 
   const nextStep = () =>
     setCurrentStep((prev) => (prev < sections.length - 1 ? prev + 1 : prev));
@@ -255,7 +264,10 @@ const handleDownload = async () => {
             ))}
           </div>
         )}
-
+        {currentStep === 1 && <textarea className="form-control" rows={4} 
+        placeholder="Job Preferences" value={form.jobPreferences} onChange={(e) =>
+         handleChange("jobPreferences", null, e.target.value)} />}
+         <hr />
         {currentStep === 1 && (
           <textarea
             className="form-control"
@@ -323,9 +335,8 @@ const handleDownload = async () => {
         )}
 
         {/* Steps 14–16 */}
-        {currentStep === 14 && <textarea className="form-control" rows={4} placeholder="Job Preferences" value={form.jobPreferences} onChange={(e) => handleChange("jobPreferences", null, e.target.value)} />}
-        {currentStep === 15 && <textarea className="form-control" rows={4} placeholder="Family Background" value={form.familyBackground} onChange={(e) => handleChange("familyBackground", null, e.target.value)} />}
-        {currentStep === 16 && <textarea className="form-control" rows={4} placeholder="Declaration" value={form.declaration} onChange={(e) => handleChange("declaration", null, e.target.value)} />}
+        {currentStep === 14 && <textarea className="form-control" rows={4} placeholder="Family Background" value={form.familyBackground} onChange={(e) => handleChange("familyBackground", null, e.target.value)} />}
+        {currentStep === 15 && <textarea className="form-control" rows={4} placeholder="Declaration" value={form.declaration} onChange={(e) => handleChange("declaration", null, e.target.value)} />}
       </div>
 
       <div className="d-flex justify-content-between mt-4">

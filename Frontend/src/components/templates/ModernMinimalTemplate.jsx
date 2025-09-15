@@ -204,6 +204,7 @@ const ModernMinimalTemplate = React.forwardRef(({ data = {} }, ref) => {
                 <p className="text-sm">{careerObjective}</p>
               </section>
             )}
+            
 
             {projects.some((proj) => proj.title || proj.description || proj.link) && (
               <section>

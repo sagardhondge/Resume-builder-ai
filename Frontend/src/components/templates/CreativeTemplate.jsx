@@ -80,6 +80,14 @@ const CreativeTemplate = ({ data = {} }) => {
           </p>
           <hr style={{ border: "1px dashed #2a52be" }} />
         </>
+      )}     
+       {/* ===== Job Preferences ===== */}
+      {jobPreferences && jobPreferences.trim() !== "" && (
+        <>
+          <h2>Job Preferences</h2>
+          <p>{jobPreferences}</p>
+          <hr style={{ border: "1px dashed #2a52be" }} />
+        </>
       )}
 
       {/* ===== Career Objective ===== */}
@@ -224,16 +232,6 @@ const CreativeTemplate = ({ data = {} }) => {
           <hr style={{ border: "1px dashed #2a52be" }} />
         </>
       )}
-
-      {/* ===== Job Preferences ===== */}
-      {jobPreferences && jobPreferences.trim() !== "" && (
-        <>
-          <h2>Job Preferences</h2>
-          <p>{jobPreferences}</p>
-          <hr style={{ border: "1px dashed #2a52be" }} />
-        </>
-      )}
-
       {/* ===== Family Background ===== */}
       {familyBackground && familyBackground.trim() !== "" && (
         <>

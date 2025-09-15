@@ -112,6 +112,14 @@ const ExecutiveTemplate = ({ data = {} }) => {
             <hr className="my-6 border-2 border-gray-700" />
           </div>
         )}
+        {/* ===== Job Preferences ===== */}
+        {jobPreferences && jobPreferences.trim() !== "" && (
+          <div className="mb-6">
+            <h2 className="text-xl font-bold uppercase tracking-wide border-b-2 border-gray-400 pb-1 mb-2">Job Preferences</h2>
+            <p className="text-sm">{jobPreferences}</p>
+            <hr className="my-6 border-2 border-gray-700" />
+          </div>
+        )}
 
         {/* ===== Career Objective ===== */}
         {careerObjective && careerObjective.trim() !== "" && (
@@ -288,16 +296,6 @@ const ExecutiveTemplate = ({ data = {} }) => {
             <hr className="my-6 border-2 border-gray-700" />
           </div>
         )}
-
-        {/* ===== Job Preferences ===== */}
-        {jobPreferences && jobPreferences.trim() !== "" && (
-          <div className="mb-6">
-            <h2 className="text-xl font-bold uppercase tracking-wide border-b-2 border-gray-400 pb-1 mb-2">Job Preferences</h2>
-            <p className="text-sm">{jobPreferences}</p>
-            <hr className="my-6 border-2 border-gray-700" />
-          </div>
-        )}
-
         {/* ===== Family Background ===== */}
         {familyBackground && familyBackground.trim() !== "" && (
           <div className="mb-6">
