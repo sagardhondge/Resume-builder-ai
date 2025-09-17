@@ -10,6 +10,7 @@ import connectDB from "./config/db.js";
 import aiRoutes from "./routes/aiRoutes.js";
 import resumeRoutes from "./routes/resumeRoute.js";
 import authRoutes from "./routes/authRoutes.js";
+
 const app = express();
 
 // Connect to MongoDB
@@ -28,6 +29,7 @@ app.get("/", (req, res) => {
 app.use("/api/ai", aiRoutes);
 app.use("/api/resumes", resumeRoutes);
 app.use("/api/auth", authRoutes);
+
 // 404 Handler
 app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
